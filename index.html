@@ -108,29 +108,42 @@
         nextTrial();
     }
 
-    function showResults() {
-        document.getElementById('screen-test').classList.add('hidden');
-        document.getElementById('screen-result').classList.remove('hidden');
+        function showResults() {
+    document.getElementById('screen-test').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
 
-        const avgRT = results.reduce((a, b) => a + b.responseTime, 0) / maxTrials;
-        const accuracy = (results.filter(r => r.isCorrect).length / maxTrials) * 100;
-        const usage = document.getElementById('usage-range').value;
+    const avgRT = results.reduce((a, b) => a + b.responseTime, 0) / maxTrials;
+    const accuracy = (results.filter(r => r.isCorrect).length / maxTrials) * 100;
+    const usage = document.getElementById('usage-range').value;
+    
+    let advice = (avgRT > 1000 || accuracy < 80) ? "Cảnh báo Brain Rot" : "Tập trung tốt";
 
-        let advice = "";
-        if(avgRT > 1000 || accuracy < 80) {
-            advice = "Cảnh báo: Khả năng ức chế xung đột của não bạn đang chậm. Có dấu hiệu của 'Brain Rot'.";
-        } else {
-            advice = "Tuyệt vời: Khả năng tập trung của bạn vẫn rất sắc bén!";
-        }
+    // Hiển thị lên màn hình
+    document.getElementById('final-stats').innerHTML = `
+        <p>Đang gửi dữ liệu nghiên cứu...</p>
+    `;
 
+    // GỬI DỮ LIỆU LÊN DATABASE (Google Sheets)
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwFuXpAOkHGpKvxSQqd8nZfxnSmkGEsPonl9JzwkymPdvVoJMEs5rqk-7OZCbKoSWg/exec';
+    
+    fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({
+            usage: usage,
+            avgRT: avgRT.toFixed(0),
+            accuracy: accuracy,
+            advice: advice
+        })
+    })
+    .then(response => {
         document.getElementById('final-stats').innerHTML = `
-            <p><b>Thời gian dùng MXH:</b> ${usage} giờ/ngày</p>
-            <p><b>Tốc độ phản xạ TB:</b> ${avgRT.toFixed(0)} ms</p>
+            <p>✅ Đã lưu dữ liệu thành công!</p>
+            <p><b>Tốc độ phản xạ:</b> ${avgRT.toFixed(0)} ms</p>
             <p><b>Độ chính xác:</b> ${accuracy}%</p>
-            <hr>
-            <p><b>Nhận xét:</b> ${advice}</p>
         `;
-    }
+    })
+    .catch(error => console.error('Lỗi!', error.message));
+}
 </script>
 </body>
 </html>
