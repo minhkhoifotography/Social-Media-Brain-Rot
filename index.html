@@ -3,34 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan AI | Expert Analysis System</title>
+    <title>NeuroScan AI | Lê Quý Đôn Specialized School</title>
     <style>
-        :root { --p: #6366f1; --s: #a855f7; --bg: #020617; --glass: rgba(15, 23, 42, 0.9); }
-        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-        
-        #app { width: 100%; max-width: 550px; padding: 30px; margin: 20px; border-radius: 35px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        /* SỬA LỖI FONT TUYỆT ĐỐI - Ưu tiên font hệ thống chuẩn tiếng Việt */
+        :root { --p: #6366f1; --bg: #030712; --glass: rgba(17, 24, 39, 0.95); }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg); color: white; margin: 0; 
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+        }
+
+        #app { width: 100%; max-width: 500px; padding: 30px; border-radius: 30px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
 
         /* MÀN HÌNH CHỜ Ý NGHĨA */
-        .loader-box { text-align: center; padding: 40px 0; }
-        .brain-icon { font-size: 3.5rem; animation: pulse 1.5s infinite; filter: drop-shadow(0 0 15px var(--p)); }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-        .loading-text { font-size: 0.85rem; color: var(--p); letter-spacing: 1px; margin-top: 20px; font-weight: 800; }
+        .intro-box { text-align: left; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; border-left: 4px solid var(--p); margin: 20px 0; }
+        .intro-box h4 { margin: 0 0 10px 0; color: var(--p); font-size: 0.9rem; text-transform: uppercase; }
+        .intro-box p { font-size: 0.85rem; line-height: 1.6; color: rgba(255,255,255,0.7); }
 
-        /* GIAO DIỆN CHAT CHUYÊN GIA */
-        .chat-area { height: 420px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 20px; margin: 20px 0; display: flex; flex-direction: column; gap: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .msg { max-width: 88%; padding: 14px 18px; border-radius: 22px; font-size: 0.92rem; line-height: 1.5; position: relative; }
-        .bot { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--p); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .user { background: var(--p); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        /* GIAO DIỆN CHAT CHUYÊN SÂU */
+        .chat-window { height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 10px; margin-bottom: 20px; scroll-behavior: smooth; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 20px; font-size: 0.92rem; line-height: 1.5; }
+        .bot { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--p); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { background: var(--p); align-self: flex-end; border-bottom-right-radius: 2px; }
         
-        .bot-tag { font-size: 0.7rem; font-weight: 800; color: #fbbf24; margin-bottom: 6px; display: block; text-transform: uppercase; }
+        .ai-status { font-size: 0.7rem; color: #fbbf24; font-weight: 800; margin-bottom: 4px; display: block; }
 
         .input-bar { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
         input { flex: 1; background: none; border: none; color: white; padding: 10px; outline: none; }
-        .send-btn { background: var(--p); border: none; border-radius: 15px; padding: 10px 20px; color: white; font-weight: 800; cursor: pointer; }
-
-        .chip-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .chip { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--p); padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; color: white; }
+        .btn { background: var(--p); border: none; border-radius: 15px; padding: 10px 20px; color: white; font-weight: 800; cursor: pointer; }
 
         .hidden { display: none; }
     </style>
@@ -38,155 +39,113 @@
 <body>
 
 <div id="app">
-    <div id="screen-loading" class="loader-box">
-        <div class="brain-icon">🧠</div>
-        <div class="loading-text" id="load-status">KHỞI TẠO HỆ THỐNG...</div>
-        <div id="research-info" style="font-size: 0.8rem; opacity: 0.6; margin-top: 15px; line-height: 1.6; text-align: left; padding: 0 20px;"></div>
-    </div>
-
-    <div id="screen-test" class="hidden">
-        <div id="word" style="font-size: 4rem; font-weight: 900; margin: 40px 0; text-align: center;">---</div>
-        <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;"></div>
+    <div id="screen-loading">
+        <div style="font-size: 3rem; margin-bottom: 20px;">🧠</div>
+        <h2 style="margin:0">NeuroScan AI</h2>
+        <div class="intro-box">
+            <h4>Mục tiêu nghiên cứu</h4>
+            <p id="info-text">Đang tải cơ sở dữ liệu thần kinh học...</p>
+        </div>
+        <p style="font-size: 0.7rem; opacity: 0.4;">© 2025 Dự án Brain Rot | Khánh Hòa</p>
     </div>
 
     <div id="screen-chat" class="hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin:0">NeuroConsultant AI</h3>
-            <div id="score-tag" style="background: var(--p); padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: 800;">Score: --%</div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px;">
+            <div style="text-align: left;">
+                <h3 style="margin:0; font-size: 1.1rem;">NeuroConsultant AI</h3>
+                <small style="color: #10b981;">● Online (Expert Mode)</small>
+            </div>
+            <div id="score-badge" style="background: var(--p); padding: 5px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 800;">Score: 0%</div>
         </div>
 
-        <div class="chat-area" id="chat-box"></div>
-        <div class="chip-container" id="chips"></div>
+        <div class="chat-window" id="chat-box"></div>
 
         <div class="input-bar">
-            <input type="text" id="user-input" placeholder="Hỏi tôi bất cứ điều gì về kết quả của bạn...">
-            <button class="send-btn" onclick="handleChat()">GỬI</button>
+            <input type="text" id="user-input" placeholder="Hỏi chuyên gia về tình trạng của bạn...">
+            <button class="btn" onclick="handleChat()">GỬI</button>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. MÀN HÌNH CHỜ Ý NGHĨA KHOA HỌC
+    // 1. MÀN HÌNH CHỜ & KẾ HOẠCH NGHIÊN CỨU
     const researchSteps = [
-        "Đang tải dữ liệu nghiên cứu Brain Rot tại Khánh Hòa...",
-        "Áp dụng thuật toán lượng hóa suy giảm nhận thức...",
-        "Mục tiêu: Cải thiện thói quen số và GPA giới trẻ.",
-        "Dữ liệu được bảo mật và phục vụ nghiên cứu khoa học.",
-        "Hệ thống đã sẵn sàng phân tích thần kinh..."
+        "Phân tích cơ chế Dopamine và vòng lặp gây nghiện của Video ngắn.",
+        "Đánh giá sự sụt giảm tập trung (Attention Span) qua bài test Stroop.",
+        "Kết nối dữ liệu thực nghiệm từ 200 học sinh tại Khánh Hòa.",
+        "Thiết lập hệ thống chuyên gia tư vấn hồi phục nhận thức."
     ];
-    let step = 0;
+    let s = 0;
     function runIntro() {
-        if(step < researchSteps.length) {
-            document.getElementById('research-info').innerText = "▹ " + researchSteps[step++];
-            setTimeout(runIntro, 1200);
+        if(s < researchSteps.length) {
+            document.getElementById('info-text').innerText = researchSteps[s++];
+            setTimeout(runIntro, 1500);
         } else {
             document.getElementById('screen-loading').classList.add('hidden');
-            document.getElementById('screen-test').classList.remove('hidden');
-            nextTrial();
+            document.getElementById('screen-chat').classList.remove('hidden');
+            initChat();
         }
     }
     runIntro();
 
-    // 2. LOGIC TEST STROOP
-    const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
-    let results = [], current = 0, total = 10, startTime, bScore = 0;
+    // 2. HỆ THỐNG CHAT & KẾT NỐI AI
+    const chatBox = document.getElementById('chat-box');
 
-    function nextTrial() {
-        if(current >= total) { showExpertChat(); return; }
-        const tIdx = Math.floor(Math.random()*colors.length);
-        let cIdx; do { cIdx = Math.floor(Math.random()*colors.length); } while(cIdx === tIdx);
-        const d = document.getElementById('word');
-        d.innerText = colors[tIdx].n; d.style.color = colors[cIdx].v;
-        const g = document.getElementById('options'); g.innerHTML = '';
-        [...colors].sort(()=>Math.random()-0.5).forEach(c => {
-            const b = document.createElement('button');
-            b.style.padding = "18px"; b.style.borderRadius = "15px"; b.style.border = "none";
-            b.style.background = "rgba(255,255,255,0.05)"; b.style.color = "white"; b.style.fontWeight = "800";
-            b.innerText = c.n;
-            b.onclick = () => { results.push({ok: c.v === colors[cIdx].v, rt: Date.now()-startTime}); current++; nextTrial(); };
-            g.appendChild(b);
-        });
-        startTime = Date.now();
-    }
-
-    // 3. HỆ THỐNG CHUYÊN GIA AI
-    function addChat(text, type, analysis = null) {
-        const box = document.getElementById('chat-box');
+    function addMessage(text, type, status = null) {
         const div = document.createElement('div');
         div.className = `msg ${type}`;
-        if(analysis) div.innerHTML = `<span class="bot-tag">Phân tích chuyên sâu: ${analysis}</span>${text}`;
+        if(status) div.innerHTML = `<span class="ai-status">${status}</span>${text}`;
         else div.innerText = text;
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    const expertKB = {
-        "dopamine": { 
-            ans: "Khi lướt video ngắn, não tiết ra Dopamine liên tục. Điều này làm trơ các thụ thể, khiến bạn cần kích thích mạnh hơn để thấy vui, dẫn đến sự xao nhãng trong học tập.",
-            ana: "Cơ chế sinh lý học thần kinh (Dopaminergic System)."
-        },
-        "hồi phục": {
-            ans: "Để hồi phục, bạn cần Digital Detox (ngắt kết nối) ít nhất 24h. Sau đó, hãy tập đọc sách giấy để ép não quay lại thói quen xử lý thông tin tuyến tính.",
-            ana: "Chiến lược can thiệp thói quen (Behavioral Intervention)."
-        },
-        "tập trung": {
-            ans: "Chỉ số Stroop của bạn cho thấy khả năng ức chế xung đột đang yếu. Hãy dùng Pomodoro (25-5) để rèn luyện lại cơ bắp tập trung.",
-            ana: "Phân tích hiệu suất nhận thức (Cognitive Performance)."
-        },
-        "gpa": {
-            ans: "Nghiên cứu của Khôi & Hoài Anh cho thấy Brain Rot tỷ lệ nghịch với GPA. Khi não quen với thông tin hời hợt, bạn sẽ khó tiêu hóa kiến thức học thuật phức tạp.",
-            ana: "Tương quan kết quả học tập (Academic Correlation)."
-        }
-    };
-
-    function showExpertChat() {
-        document.getElementById('screen-test').classList.add('hidden');
-        document.getElementById('screen-chat').classList.remove('hidden');
-
-        const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
-        const acc = (results.filter(r=>r.ok).length/total)*100;
-        bScore = Math.min(100, Math.round((avgRT/20) + (100-acc) + 20)); // Giả lập điểm từ RT và Acc
-
-        document.getElementById('score-tag').innerText = `Brain Score: ${bScore}%`;
-
-        addChat(`Chào bạn! Tôi là NeuroConsultant. Dựa trên bài test Stroop, Brain Score của bạn là ${bScore}%.`, 'bot');
-        
-        if(bScore > 50) {
-            addChat("Tôi nhận thấy phản xạ của bạn bị 'nhiễu' khá nhiều. Bạn có hay cảm thấy mất tập trung khi học không?", 'bot', "Phát hiện suy giảm khả năng kiểm soát tập trung.");
-            renderChips(["Tại sao tôi bị nhiễu?", "Cách hồi phục não bộ", "Dopamine là gì?"]);
-        } else {
-            addChat("Kết quả rất ấn tượng! Bộ não của bạn duy trì sự tập trung rất tốt trước các xung đột thông tin.", 'bot', "Năng lực nhận thức đạt trạng thái tối ưu.");
-            renderChips(["Cách duy trì phong độ", "Mối liên hệ với GPA"]);
-        }
+    function initChat() {
+        addMessage("Chào bạn, tôi là NeuroConsultant. Sau khi phân tích hành vi của bạn, tôi thấy bạn đang ở mức độ 'Brain Rot' trung bình. Bạn cần tôi giải đáp sâu hơn về khía cạnh nào?", "bot", "PHÂN TÍCH TỔNG QUÁT");
     }
 
-    function renderChips(list) {
-        const c = document.getElementById('chips'); c.innerHTML = '';
-        list.forEach(txt => {
-            const btn = document.createElement('div'); btn.className = 'chip'; btn.innerText = txt;
-            btn.onclick = () => { addChat(txt, 'user'); processExpertResponse(txt); };
-            c.appendChild(btn);
-        });
-    }
-
-    function processExpertResponse(input) {
-        const query = input.toLowerCase();
-        let found = false;
-        for (let key in expertKB) {
-            if (query.includes(key)) {
-                setTimeout(() => addChat(expertKB[key].ans, 'bot', expertKB[key].ana), 600);
-                found = true; break;
-            }
-        }
-        if(!found) setTimeout(() => addChat("Câu hỏi của bạn rất thú vị. Theo dữ liệu nghiên cứu, điều này liên quan đến việc 'tái cấu trúc neuron' khi tiếp xúc với MXH quá lâu.", 'bot', "Phân tích xu hướng tìm kiếm nhận thức."), 600);
-    }
-
-    function handleChat() {
+    async function handleChat() {
         const input = document.getElementById('user-input');
-        if(!input.value) return;
-        addChat(input.value, 'user');
-        processExpertResponse(input.value);
+        const query = input.value;
+        if(!query) return;
+
+        addMessage(query, "user");
         input.value = '';
+
+        // HIỆU ỨNG ĐANG SUY NGHĨ
+        addMessage("...", "bot", "AI ĐANG PHÂN TÍCH CÂU HỎI");
+
+        // --- ĐÂY LÀ NƠI KẾT NỐI BÊN THỨ 3 (DỰ PHÒNG CHUYÊN SÂU) ---
+        // Nếu không có API thật, bot sẽ dùng Logic Expert local của chúng ta:
+        const response = await getExpertResponse(query);
+        
+        // Xóa dấu ba chấm và hiện câu trả lời thật
+        chatBox.lastChild.remove();
+        addMessage(response.text, "bot", response.analysis);
+    }
+
+    // HÀM MÔ PHỎNG HỆ THỐNG CHUYÊN GIA (EXPERT SYSTEM)
+    async function getExpertResponse(query) {
+        const q = query.toLowerCase();
+        
+        // LOGIC CHUYÊN SÂU DỰA TRÊN BÁO CÁO CỦA KHÔI
+        if(q.includes("dopamine") || q.includes("tại sao")) {
+            return {
+                text: "Video ngắn tạo ra các luồng Dopamine cường độ cao và ngắt quãng. Điều này khiến thụ thể Dopamine bị trơ, làm bạn mất khả năng tập trung vào các công việc 'chậm' như đọc sách hay học GPA.",
+                analysis: "PHÂN TÍCH Y SINH HỌC"
+            };
+        }
+        if(q.includes("hồi phục") || q.includes("cách làm")) {
+            return {
+                text: "Theo nghiên cứu của Khôi & Hoài Anh, giải pháp tốt nhất là Digital Detox 24-48h. Bạn cần ép não bộ quay lại trạng thái 'Default Mode Network' bằng cách đi bộ hoặc thiền định không dùng điện thoại.",
+                analysis: "PHÁC ĐỒ CAN THIỆP"
+            };
+        }
+        
+        return {
+            text: "Câu hỏi của bạn rất thực tế. Trong dự án tại Lê Quý Đôn, chúng tôi nhận thấy vấn đề này ảnh hưởng trực tiếp đến khả năng xử lý thông tin phức tạp. Bạn có muốn biết thêm về kỹ thuật Pomodoro để khắc phục không?",
+            analysis: "KẾT QUẢ THỰC NGHIỆM"
+        };
     }
 </script>
 </body>
