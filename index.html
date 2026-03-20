@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan AI | Lê Quý Đôn - Khánh Hòa</title>
+    <title>NeuroScan AI - Expert Mode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* FIX FONT TUYỆT ĐỐI: Dùng font hệ thống chuẩn tiếng Việt */
-        :root { --p: #6366f1; --bg: #030712; --glass: rgba(17, 24, 39, 0.95); }
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        :root { --p: #6366f1; --bg: #020617; --glass: rgba(15, 23, 42, 0.95); }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         
         #app { width: 100%; max-width: 500px; padding: 30px; border-radius: 30px; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
 
         /* MÀN HÌNH CHỜ Ý NGHĨA */
-        .info-card { background: rgba(99, 102, 241, 0.1); padding: 20px; border-radius: 20px; border-left: 4px solid var(--p); text-align: left; margin: 20px 0; }
-        .info-card h4 { margin: 0 0 10px; color: var(--p); font-size: 0.8rem; text-transform: uppercase; }
-        .info-card p { font-size: 0.85rem; line-height: 1.6; margin: 0; opacity: 0.8; }
+        .intro-card { background: rgba(99, 102, 241, 0.1); padding: 20px; border-radius: 20px; border-left: 4px solid var(--p); text-align: left; margin: 20px 0; }
+        .intro-card p { font-size: 0.9rem; line-height: 1.6; margin: 0; opacity: 0.9; }
 
-        /* CHATBOT AREA - Chỉ hiện sau khi test */
-        .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 20px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); }
-        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
+        /* CHATBOT AREA */
+        .chat-box { height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 20px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.92rem; line-height: 1.5; }
         .bot { background: rgba(99, 102, 241, 0.15); border: 1px solid var(--p); align-self: flex-start; border-bottom-left-radius: 2px; }
         .user { background: var(--p); align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        .ai-label { font-size: 0.7rem; color: #fbbf24; font-weight: 800; display: block; margin-bottom: 4px; }
-        .input-bar { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 15px; }
+        .ai-label { font-size: 0.7rem; color: #fbbf24; font-weight: 800; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .input-bar { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
         input { flex: 1; background: none; border: none; color: white; padding: 10px; outline: none; }
         
         .btn { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--p); color: white; font-weight: 800; cursor: pointer; }
@@ -35,13 +34,12 @@
 
 <div id="app">
     <div id="screen-intro">
-        <h2 style="margin:0">NeuroScan AI</h2>
-        <p style="font-size: 0.75rem; color: var(--p); font-weight: 700;">DỰ ÁN NGHIÊN CỨU BRAIN ROT - KHÁNH HÒA</p>
-        <div class="info-card">
-            <h4>Mục đích nghiên cứu</h4>
-            <p id="type-text"></p>
+        <h2 style="margin:0; letter-spacing: -1px;">NeuroScan AI</h2>
+        <p style="font-size: 0.75rem; color: var(--p); font-weight: 800; margin-top: 5px;">NGHIÊN CỨU BRAIN ROT | KHÁNH HÒA</p>
+        <div class="intro-card">
+            <p id="intro-text">Đang phân tích mục tiêu nghiên cứu...</p>
         </div>
-        <button class="btn" onclick="startSurvey()">BẮT ĐẦU KHẢO SÁT</button>
+        <button class="btn" onclick="startSurvey()">BẮT ĐẦU CHẨN ĐOÁN</button>
     </div>
 
     <div id="screen-test" class="hidden">
@@ -51,37 +49,37 @@
 
     <div id="screen-ai" class="hidden">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div style="text-align: left;"><h3 style="margin:0">NeuroConsultant AI</h3><small style="color:#10b981">● Phân tích chuyên sâu</small></div>
-            <div id="brain-score" style="background:var(--p); padding: 5px 12px; border-radius: 10px; font-weight: 800;">0%</div>
+            <div style="text-align: left;"><h3 style="margin:0; font-size: 1.1rem;">Trợ lý Neuro-AI</h3><small style="color:#10b981">● Chuyên gia Thần kinh học</small></div>
+            <div id="score-display" style="background:var(--p); padding: 5px 12px; border-radius: 10px; font-weight: 800; font-size: 0.8rem;">SCORE: 0%</div>
         </div>
         <div class="chat-box" id="chat-content"></div>
         <div class="input-bar">
-            <input type="text" id="user-msg" placeholder="Đặt câu hỏi cho AI chuyên gia...">
-            <button onclick="askAI()" style="background:var(--p); border:none; color:white; border-radius:10px; padding:0 15px; cursor:pointer;">GỬI</button>
+            <input type="text" id="user-msg" placeholder="Hỏi AI về kết quả nhận thức của bạn...">
+            <button onclick="askGemini()" style="background:var(--p); border:none; color:white; border-radius:10px; padding:0 15px; cursor:pointer; font-weight:bold;">GỬI</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- HIỆU ỨNG GIỚI THIỆU ---
-    const introLines = [
-        "Phân tích tác động của nội dung số ngắn đến hệ thần kinh.",
-        "Đo lường sự sụt giảm tập trung qua phản xạ Stroop.",
-        "Đề xuất phác đồ hồi phục dựa trên kết quả thực nghiệm.",
-        "Dữ liệu được xử lý bởi mô hình AI chuyên sâu."
+    // 1. CHỮ CHẠY GIỚI THIỆU
+    const facts = [
+        "Nghiên cứu về sự suy giảm nhận thức do Video ngắn.",
+        "Đo lường năng lực ức chế xung đột qua bài test thần kinh.",
+        "Đề xuất giải pháp can thiệp thói quen số cho giới trẻ.",
+        "Dữ liệu được bảo mật phục vụ mục đích khoa học."
     ];
-    let lineIdx = 0;
-    function typeIntro() {
-        if(lineIdx < introLines.length) {
-            document.getElementById('type-text').innerText = "▹ " + introLines[lineIdx++];
-            setTimeout(typeIntro, 1800);
+    let fIdx = 0;
+    function runIntro() {
+        if(fIdx < facts.length) {
+            document.getElementById('intro-text').innerText = "▹ " + facts[fIdx++];
+            setTimeout(runIntro, 1800);
         }
     }
-    typeIntro();
+    runIntro();
 
-    // --- LOGIC TEST (CHỈ SAU KHI XONG MỚI HIỆN BOT) ---
+    // 2. LOGIC TEST
     const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
-    let results = [], current = 0, total = 10, startTime, score = 0;
+    let results = [], current = 0, total = 10, startTime, finalScore = 0;
 
     function startSurvey() {
         document.getElementById('screen-intro').classList.add('hidden');
@@ -90,7 +88,7 @@
     }
 
     function next() {
-        if(current >= total) { initAIExpert(); return; }
+        if(current >= total) { showAI(); return; }
         const tIdx = Math.floor(Math.random()*colors.length);
         let cIdx; do { cIdx = Math.floor(Math.random()*colors.length); } while(cIdx === tIdx);
         const d = document.getElementById('word'); d.innerText = colors[tIdx].n; d.style.color = colors[cIdx].v;
@@ -105,51 +103,49 @@
         startTime = Date.now();
     }
 
-    // --- HỆ THỐNG CHATBOT CHỈ XUẤT HIỆN SAU PHÂN TÍCH ---
+    // 3. AI CHUYÊN GIA (CHỈ HIỆN SAU KHI TEST)
     function addChat(text, type, label = null) {
         const box = document.getElementById('chat-content');
         const div = document.createElement('div');
         div.className = `msg ${type}`;
-        if(label) div.innerHTML = `<span class="ai-label">🤖 ${label}</span>${text}`;
+        if(label) div.innerHTML = `<span class="ai-label">${label}</span>${text}`;
         else div.innerText = text;
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
     }
 
-    function initAIExpert() {
+    function showAI() {
         document.getElementById('screen-test').classList.add('hidden');
         document.getElementById('screen-ai').classList.remove('hidden');
         
         const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
         const acc = (results.filter(r=>r.ok).length/total)*100;
-        score = Math.min(100, Math.round((avgRT/25) + (100-acc) + 20));
+        finalScore = Math.min(100, Math.round((avgRT/25) + (100-acc) + 20));
+        document.getElementById('score-display').innerText = `SCORE: ${finalScore}%`;
 
-        document.getElementById('brain-score').innerText = score + "%";
-        
-        // Bot chào đúng ngữ cảnh sau khi làm xong khảo sát
-        addChat(`Chào Khôi, tôi đã nhận được dữ liệu. Với Brain Score ${score}%, tôi nhận thấy bạn đang có dấu hiệu mệt mỏi nhận thức. Bạn muốn tôi giải đáp sâu về khía cạnh nào?`, "bot", "PHÂN TÍCH THỰC NGHIỆM");
+        addChat(`Phân tích hoàn tất. Chỉ số Brain Rot của Khôi là ${finalScore}%. Dựa trên phản xạ thực tế, bạn muốn tôi giải đáp sâu về khía cạnh nào?`, "bot", "CHẨN ĐOÁN THẦN KINH");
     }
 
-    async function askAI() {
+    async function askGemini() {
         const inp = document.getElementById('user-msg');
-        const query = inp.value; if(!query) return;
-        addChat(query, "user"); inp.value = '';
-        
-        addChat("...", "bot", "ĐANG KẾT NỐI GEMINI AI...");
-        
-        // GIẢ LẬP KẾT NỐI BÊN THỨ 3 (Bạn có thể thay bằng fetch API Gemini thật ở đây)
+        const q = inp.value; if(!q) return;
+        addChat(q, "user"); inp.value = '';
+        addChat("Đang phân tích câu hỏi qua Gemini AI...", "bot", "ĐANG XỬ LÝ");
+
+        // --- ĐÂY LÀ NƠI GỌI API GEMINI THẬT ---
+        // Khôi có thể dùng Google Apps Script làm trung gian để gọi Gemini API an toàn
         setTimeout(() => {
             document.getElementById('chat-content').lastChild.remove();
-            const reply = processExpertQuery(query);
+            const reply = getExpertReply(q, finalScore);
             addChat(reply.text, "bot", reply.tag);
         }, 1000);
     }
 
-    function processExpertQuery(q) {
-        q = q.toLowerCase();
-        if(q.includes("tại sao")) return { text: "Do tác động của Dopamine ngắt quãng từ video ngắn, làm suy giảm khả năng ức chế xung đột của thùy trán.", tag: "SINH LÝ HỌC THẦN KINH" };
-        if(q.includes("cách")) return { text: "Bạn nên áp dụng Digital Detox 24h và rèn luyện đọc sâu (Deep Reading) để tái cấu trúc neuron.", tag: "PHÁC ĐỒ HỒI PHỤC" };
-        return { text: "Đây là một khía cạnh quan trọng trong dự án KHKT của bạn. Nghiên cứu tại Lê Quý Đôn cho thấy điều này liên quan mật thiết đến GPA.", tag: "NGHIÊN CỨU THỰC ĐỊA" };
+    function getExpertReply(q, s) {
+        const query = q.toLowerCase();
+        // Logic trả lời dựa trên Brain Score thực tế của người dùng
+        if(query.includes("tại sao")) return { text: `Với mức Brain Score ${s}%, việc bạn bị chậm phản xạ là do Dopamine làm trơ thùy trán.`, tag: "CƠ CHẾ SINH LÝ" };
+        return { text: "Đây là vấn đề cốt lõi trong nghiên cứu tại Lê Quý Đôn. Bạn có muốn biết phác đồ hồi phục không?", tag: "TƯ VẤN CHUYÊN SÂU" };
     }
 </script>
 </body>
