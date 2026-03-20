@@ -3,221 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan v1.0 | LMK Research</title>
+    <title>NeuroAssistant v2.0 | AI Diagnostic</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --bg: #0b0f1a;
-            --card: rgba(23, 31, 50, 0.8);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            color: white;
-            margin: 0; min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                              radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
-        }
-        #app {
-            width: 100%; max-width: 500px;
-            padding: 40px; border-radius: 32px;
-            background: var(--card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-        .header { margin-bottom: 40px; }
-        .header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin: 0; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header p { font-size: 0.85rem; opacity: 0.5; margin-top: 8px; }
+        :root { --primary: #6366f1; --bg: #0b0f1a; --card: rgba(23, 31, 50, 0.8); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        #app { width: 100%; max-width: 500px; padding: 40px; border-radius: 32px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        
+        /* Assistant Avatar */
+        .avatar-cpu { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), #a855f7); border-radius: 50%; margin: 0 auto 20px; box-shadow: 0 0 20px var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Custom Slider */
-        .slider-container { margin: 30px 0; text-align: left; }
-        .slider-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; display: block; color: rgba(255,255,255,0.9); }
-        input[type="range"] {
-            -webkit-appearance: none; width: 100%; height: 6px;
-            background: rgba(255,255,255,0.1); border-radius: 10px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 20px; height: 20px;
-            background: var(--primary); border-radius: 50%; cursor: pointer;
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        /* Choice Chips (Thay thế cho Select) */
-        .chip-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .chip {
-            padding: 10px 18px; border-radius: 12px;
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            font-size: 0.85rem; cursor: pointer; font-weight: 500;
-        }
-        .chip.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
-
-        .btn-main {
-            margin-top: 30px; width: 100%; padding: 16px;
-            border-radius: 16px; border: none;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; font-weight: 700; font-size: 1rem;
-            cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(99, 102, 241, 0.4); }
-
+        .chat-bubble { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px 15px 15px 0; margin-bottom: 25px; font-size: 0.95rem; line-height: 1.5; border-left: 3px solid var(--primary); }
+        .slider-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin-bottom: 15px; }
+        .btn-action { width: 100%; padding: 16px; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer; margin-top: 20px; }
+        
         /* Test Area */
-        .stroop-word { font-size: 4.5rem; font-weight: 800; margin: 40px 0; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .opt-btn {
-            padding: 20px; border-radius: 20px; border: 1px solid var(--border);
-            background: rgba(255,255,255,0.03); color: white; font-weight: 700;
-            cursor: pointer; font-size: 1rem;
-        }
-        .opt-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        .word-display { font-size: 4rem; font-weight: 800; margin: 30px 0; min-height: 100px; }
+        .grid-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ans-btn { padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: none; color: white; font-weight: 700; cursor: pointer; }
 
+        /* Prescription Card (Thẻ giải pháp) */
+        .rx-card { background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1)); border: 1px dashed var(--primary); padding: 20px; border-radius: 20px; margin-top: 20px; text-align: left; }
+        .rx-title { color: var(--primary); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; display: block; }
         .hidden { display: none; }
-        .progress-container { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        #progress-bar { height: 100%; background: var(--primary); width: 0%; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div class="header">
-        <h1>NEURO-SCAN AI</h1>
-        <p>PROJECT BRAIN ROT | LÊ QUÝ ĐÔN SPECIALIZED SCHOOL</p>
-    </div>
-
-    <div id="screen-survey">
-        <div class="slider-container">
-            <span class="slider-label">Mức độ tiêu thụ Video ngắn (Giờ/Ngày)</span>
-            <input type="range" id="usage-range" min="0" max="10" step="0.5" value="2">
-            <div style="text-align: right; margin-top: 10px; font-weight: 800; color: var(--primary);"><span id="usage-val">2</span>h</div>
+    <div class="avatar-cpu">🤖</div>
+    
+    <div id="screen-diag">
+        <div class="chat-bubble" id="ai-text">Chào Khôi! Tôi là trợ lý Neuro-AI. Hãy để tôi thăm khám mức độ "Brain Rot" của bạn qua một vài chỉ số nhé.</div>
+        
+        <div class="slider-box">
+            <small>Thời gian dùng Reels/TikTok hàng ngày:</small>
+            <input type="range" id="usage" min="0" max="10" step="1" value="2" style="width:100%; accent-color: #6366f1;">
+            <div style="text-align: right;"><span id="u-val">2</span>h</div>
         </div>
 
-        <div class="slider-container">
-            <span class="slider-label">Tốc độ lướt (Behavioral Speed)</span>
-            <div class="chip-group" id="scroll-chips">
-                <div class="chip active" data-val="1">Chậm / Kỹ</div>
-                <div class="chip" data-val="2">Vừa phải</div>
-                <div class="chip" data-val="3">Nhanh</div>
-                <div class="chip" data-val="4">Siêu nhanh</div>
-            </div>
-        </div>
-
-        <div class="slider-container">
-            <span class="slider-label">Mức độ duy trì tập trung (Deep Work)</span>
-            <div class="chip-group" id="focus-chips">
-                <div class="chip" data-val="1">Kém</div>
-                <div class="chip" data-val="2">Trung bình</div>
-                <div class="chip active" data-val="3">Tốt</div>
-                <div class="chip" data-val="4">Xuất sắc</div>
-            </div>
-        </div>
-
-        <button class="btn-main" onclick="startAnalysis()">BẮT ĐẦU PHÂN TÍCH</button>
+        <button class="btn-action" onclick="startTest()">BẮT ĐẦU KIỂM TRA NÃO BỘ</button>
     </div>
 
     <div id="screen-test" class="hidden">
-        <div class="progress-container"><div id="progress-bar"></div></div>
-        <p style="font-size: 0.8rem; opacity: 0.6;">CHỈ CHỌN MÀU SẮC, BỎ QUA CHỮ</p>
-        <div id="stroop-word" class="stroop-word">---</div>
-        <div class="options-grid" id="options-grid"></div>
+        <div class="chat-bubble">Tập trung! Chỉ chọn <b>MÀU SẮC</b> của chữ nhé...</div>
+        <div id="word" class="word-display">---</div>
+        <div class="grid-answers" id="answers"></div>
     </div>
 
     <div id="screen-result" class="hidden">
-        <div id="result-content">
-            <div style="font-size: 3rem; margin-bottom: 20px;">⚡</div>
-            <h3>PHÂN TÍCH HOÀN TẤT</h3>
-            <p id="feedback-text" style="font-size: 0.9rem; opacity: 0.7; line-height: 1.6;"></p>
-            <div id="stat-box" style="margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 20px;"></div>
+        <div class="chat-bubble" id="diagnosis-text">Đang phân tích dữ liệu thần kinh...</div>
+        
+        <div class="rx-card" id="prescription">
+            <span class="rx-title">📋 LỘ TRÌNH HỒI PHỤC</span>
+            <div id="rx-content" style="font-size: 0.85rem; opacity: 0.9;"></div>
         </div>
-        <button class="btn-main" onclick="location.reload()" style="background: rgba(255,255,255,0.1);">LÀM LẠI</button>
+        
+        <button class="btn-action" onclick="location.reload()" style="background: rgba(255,255,255,0.05);">THOÁT TRỢ LÝ</button>
     </div>
 </div>
 
 <script>
-    const colors = [
-        { n: "ĐỎ", v: "#ff4757" }, { n: "XANH", v: "#2e86de" },
-        { n: "LÁ", v: "#2ecc71" }, { n: "VÀNG", v: "#ffa502" }
-    ];
-    let current = 0, max = 12, results = [], startTime, scrollVal = 1, focusVal = 3;
+    const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
+    let results = [], current = 0, total = 12, startTime;
 
-    // Chips Logic
-    document.querySelectorAll('.chip-group').forEach(group => {
-        group.addEventListener('click', e => {
-            if(e.target.classList.contains('chip')) {
-                group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                e.target.classList.add('active');
-                if(group.id === 'scroll-chips') scrollVal = e.target.dataset.val;
-                if(group.id === 'focus-chips') focusVal = e.target.dataset.val;
-            }
-        });
-    });
+    document.getElementById('usage').oninput = function() { document.getElementById('u-val').innerText = this.value; }
 
-    document.getElementById('usage-range').oninput = function() { document.getElementById('usage-val').innerText = this.value; }
-
-    function startAnalysis() {
-        document.getElementById('screen-survey').classList.add('hidden');
+    function startTest() {
+        document.getElementById('screen-diag').classList.add('hidden');
         document.getElementById('screen-test').classList.remove('hidden');
-        runTrial();
+        next();
     }
 
-    function runTrial() {
-        if(current >= max) { finish(); return; }
-        document.getElementById('progress-bar').style.width = (current/max*100) + "%";
+    function next() {
+        if(current >= total) { showResult(); return; }
+        const tIdx = Math.floor(Math.random()*colors.length);
+        let cIdx; do { cIdx = Math.floor(Math.random()*colors.length); } while(cIdx === tIdx);
         
-        const txtIdx = Math.floor(Math.random()*colors.length);
-        let colIdx; do { colIdx = Math.floor(Math.random()*colors.length); } while(colIdx === txtIdx);
-        
-        const display = document.getElementById('stroop-word');
-        display.innerText = colors[txtIdx].n;
-        display.style.color = colors[colIdx].v;
+        const d = document.getElementById('word');
+        d.innerText = colors[tIdx].n; d.style.color = colors[cIdx].v;
 
-        const grid = document.getElementById('options-grid');
-        grid.innerHTML = '';
-        [...colors].sort(() => Math.random()-0.5).forEach(c => {
+        const g = document.getElementById('answers'); g.innerHTML = '';
+        [...colors].sort(()=>Math.random()-0.5).forEach(c => {
             const b = document.createElement('button');
-            b.className = 'opt-btn';
-            b.innerText = c.n;
-            b.onclick = () => {
-                results.push({ ok: c.v === colors[colIdx].v, rt: Date.now()-startTime });
-                current++; runTrial();
-            };
-            grid.appendChild(b);
+            b.className = 'ans-btn'; b.innerText = c.n;
+            b.onclick = () => { results.push({ok: c.v === colors[cIdx].v, rt: Date.now()-startTime}); current++; next(); };
+            g.appendChild(b);
         });
         startTime = Date.now();
     }
 
-    async function finish() {
+    async function showResult() {
         document.getElementById('screen-test').classList.add('hidden');
         document.getElementById('screen-result').classList.remove('hidden');
-        
-        const avgRT = results.reduce((a,b)=>a+b.rt,0)/max;
-        const acc = (results.filter(r=>r.ok).length/max)*100;
-        
-        document.getElementById('stat-box').innerHTML = `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>Độ nhạy:</span><b>${avgRT.toFixed(0)}ms</b></div>
-            <div style="display:flex; justify-content:space-between"><span>Chính xác:</span><b>${acc.toFixed(0)}%</b></div>
-        `;
-        document.getElementById('feedback-text').innerText = "Dữ liệu đang được đồng bộ với mô hình K-Means của hệ thống...";
 
-        // GỬI DATA (Khôi nhớ thay URL của bạn nhé)
-        const scriptURL = 'URL_CỦA_BẠN';
-        try {
-            await fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    usage: document.getElementById('usage-range').value,
-                    avgRT: avgRT.toFixed(0),
-                    accuracy: acc.toFixed(0),
-                    scroll: scrollVal,
-                    focus: focusVal
-                })
-            });
-            document.getElementById('feedback-text').innerText = "Phân tích hoàn tất. Dữ liệu của bạn đã đóng góp vào nghiên cứu Brain Rot tại Lê Quý Đôn.";
-        } catch(e) { document.getElementById('feedback-text').innerText = "Đã lưu kết quả offline (Lỗi kết nối Server)."; }
+        const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
+        const acc = (results.filter(r=>r.ok).length/total)*100;
+        const use = document.getElementById('usage').value;
+
+        let diag = "", rx = "";
+
+        if (use > 4 && avgRT > 900) {
+            diag = "Kết quả thăm khám: Bạn đang ở trạng thái <b>'Brain Rot' giai đoạn 2</b>. Não bộ bị bão hòa Dopamine khiến phản xạ trì trệ.";
+            rx = "• Thực hiện 'Dopamine Detox' 24h.<br>• Xóa TikTok/Reels trong 3 ngày.<br>• Đọc sách giấy 15 phút trước khi ngủ.";
+        } else if (acc < 70) {
+            diag = "Chẩn đoán: <b>Hội chứng Nhận thức bốc đồng</b>. Bạn phản ứng nhanh nhưng thiếu sự kiểm soát sâu.";
+            rx = "• Thực hành thiền định (Mindfulness) 5p mỗi ngày.<br>• Chơi các trò chơi tư duy logic (Sudoku, Cờ vua).<br>• Tắt thông báo điện thoại khi học tập.";
+        } else {
+            diag = "Chúc mừng! <b>Chỉ số nhận thức của bạn rất tốt</b>. Não bộ duy trì được sự minh mẫn bất chấp tác động của môi trường số.";
+            rx = "• Tiếp tục duy trì thói quen hiện tại.<br>• Thử thách não bộ với các ngôn ngữ mới (English/C++).";
+        }
+
+        document.getElementById('diagnosis-text').innerHTML = diag;
+        document.getElementById('rx-content').innerHTML = rx;
+
+        // Gửi data về Google Sheets
+        fetch('URL_CỦA_KHÔI', {
+            method: 'POST',
+            body: JSON.stringify({ usage: use, avgRT: avgRT.toFixed(0), accuracy: acc, advice: diag })
+        });
     }
 </script>
 </body>
