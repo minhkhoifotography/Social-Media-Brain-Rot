@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan AI | Chuyên gia Phân tích Nhận thức</title>
+    <title>NeuroScan AI | Expert Analysis System</title>
     <style>
-        :root { --p: #6366f1; --s: #a855f7; --bg: #030712; --glass: rgba(17, 24, 39, 0.95); }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        :root { --p: #6366f1; --s: #a855f7; --bg: #020617; --glass: rgba(15, 23, 42, 0.9); }
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         
-        #app { width: 100%; max-width: 550px; padding: 35px; border-radius: 35px; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        
-        /* Chat Engine UI */
-        .chat-window { height: 400px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 20px; margin: 20px 0; display: flex; flex-direction: column; gap: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 0.92rem; line-height: 1.5; position: relative; }
-        .bot { background: linear-gradient(135deg, var(--p), var(--s)); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2); }
-        .user { background: rgba(255,255,255,0.1); align-self: flex-end; border-bottom-right-radius: 4px; }
-        
-        .analysis-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #fbbf24; margin-bottom: 5px; display: block; }
+        #app { width: 100%; max-width: 550px; padding: 30px; margin: 20px; border-radius: 35px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
 
-        .input-group { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        input { flex: 1; background: none; border: none; color: white; padding: 10px 15px; outline: none; font-size: 0.9rem; }
+        /* MÀN HÌNH CHỜ Ý NGHĨA */
+        .loader-box { text-align: center; padding: 40px 0; }
+        .brain-icon { font-size: 3.5rem; animation: pulse 1.5s infinite; filter: drop-shadow(0 0 15px var(--p)); }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        .loading-text { font-size: 0.85rem; color: var(--p); letter-spacing: 1px; margin-top: 20px; font-weight: 800; }
+
+        /* GIAO DIỆN CHAT CHUYÊN GIA */
+        .chat-area { height: 420px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 20px; margin: 20px 0; display: flex; flex-direction: column; gap: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .msg { max-width: 88%; padding: 14px 18px; border-radius: 22px; font-size: 0.92rem; line-height: 1.5; position: relative; }
+        .bot { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--p); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user { background: var(--p); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        
+        .bot-tag { font-size: 0.7rem; font-weight: 800; color: #fbbf24; margin-bottom: 6px; display: block; text-transform: uppercase; }
+
+        .input-bar { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        input { flex: 1; background: none; border: none; color: white; padding: 10px; outline: none; }
         .send-btn { background: var(--p); border: none; border-radius: 15px; padding: 10px 20px; color: white; font-weight: 800; cursor: pointer; }
 
-        .suggest-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
-        .chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
-        .chip:hover { border-color: var(--p); background: rgba(99, 102, 241, 0.1); }
+        .chip-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .chip { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--p); padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; color: white; }
 
         .hidden { display: none; }
-        .btn-prime { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--p); color: white; font-weight: 800; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div id="screen-start">
-        <h2 style="margin:0">NeuroScan Pro</h2>
-        <p style="opacity: 0.5; font-size: 0.8rem; margin-bottom: 30px;">HỆ THỐNG PHÂN TÍCH NHẬN THỨC BỞI LMK & LHA</p>
-        <div style="text-align: left; margin-bottom: 20px;">
-            <label style="font-size: 0.8rem; opacity: 0.6;">Thời gian dùng Video ngắn (giờ/ngày):</label>
-            <input type="range" id="usage" min="0" max="10" value="3" style="width:100%; margin-top:10px;">
-            <div style="text-align: right; font-weight: 800; color: var(--p);"><span id="u-val">3</span>h</div>
-        </div>
-        <button class="btn-prime" onclick="startNeuroTest()">BẮT ĐẦU PHÂN TÍCH</button>
+    <div id="screen-loading" class="loader-box">
+        <div class="brain-icon">🧠</div>
+        <div class="loading-text" id="load-status">KHỞI TẠO HỆ THỐNG...</div>
+        <div id="research-info" style="font-size: 0.8rem; opacity: 0.6; margin-top: 15px; line-height: 1.6; text-align: left; padding: 0 20px;"></div>
     </div>
 
     <div id="screen-test" class="hidden">
@@ -50,36 +50,49 @@
     </div>
 
     <div id="screen-chat" class="hidden">
-        <div id="score-banner" style="background: rgba(99, 102, 241, 0.1); padding: 15px; border-radius: 15px; border-left: 5px solid var(--p); text-align: left;">
-            <span style="font-size: 0.75rem; font-weight: 800; opacity: 0.6;">BRAIN ROT INDEX</span>
-            <div id="final-score" style="font-size: 1.5rem; font-weight: 900; color: var(--p);">0%</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin:0">NeuroConsultant AI</h3>
+            <div id="score-tag" style="background: var(--p); padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: 800;">Score: --%</div>
         </div>
 
-        <div class="chat-window" id="chat-box"></div>
+        <div class="chat-area" id="chat-box"></div>
+        <div class="chip-container" id="chips"></div>
 
-        <div class="suggest-chips" id="chips"></div>
-
-        <div class="input-group">
-            <input type="text" id="user-input" placeholder="Hỏi tôi về tình trạng của bạn...">
+        <div class="input-bar">
+            <input type="text" id="user-input" placeholder="Hỏi tôi bất cứ điều gì về kết quả của bạn...">
             <button class="send-btn" onclick="handleChat()">GỬI</button>
         </div>
     </div>
 </div>
 
 <script>
-    const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
-    let results = [], current = 0, total = 10, startTime, brainScore = 0;
-
-    document.getElementById('usage').oninput = function() { document.getElementById('u-val').innerText = this.value; }
-
-    function startNeuroTest() {
-        document.getElementById('screen-start').classList.add('hidden');
-        document.getElementById('screen-test').classList.remove('hidden');
-        nextTrial();
+    // 1. MÀN HÌNH CHỜ Ý NGHĨA KHOA HỌC
+    const researchSteps = [
+        "Đang tải dữ liệu nghiên cứu Brain Rot tại Khánh Hòa...",
+        "Áp dụng thuật toán lượng hóa suy giảm nhận thức...",
+        "Mục tiêu: Cải thiện thói quen số và GPA giới trẻ.",
+        "Dữ liệu được bảo mật và phục vụ nghiên cứu khoa học.",
+        "Hệ thống đã sẵn sàng phân tích thần kinh..."
+    ];
+    let step = 0;
+    function runIntro() {
+        if(step < researchSteps.length) {
+            document.getElementById('research-info').innerText = "▹ " + researchSteps[step++];
+            setTimeout(runIntro, 1200);
+        } else {
+            document.getElementById('screen-loading').classList.add('hidden');
+            document.getElementById('screen-test').classList.remove('hidden');
+            nextTrial();
+        }
     }
+    runIntro();
+
+    // 2. LOGIC TEST STROOP
+    const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
+    let results = [], current = 0, total = 10, startTime, bScore = 0;
 
     function nextTrial() {
-        if(current >= total) { finalize(); return; }
+        if(current >= total) { showExpertChat(); return; }
         const tIdx = Math.floor(Math.random()*colors.length);
         let cIdx; do { cIdx = Math.floor(Math.random()*colors.length); } while(cIdx === tIdx);
         const d = document.getElementById('word');
@@ -96,77 +109,84 @@
         startTime = Date.now();
     }
 
-    // --- BỘ NÃO PHÂN TÍCH CỦA BOT ---
-    function addMsg(text, type, analysis = null) {
+    // 3. HỆ THỐNG CHUYÊN GIA AI
+    function addChat(text, type, analysis = null) {
         const box = document.getElementById('chat-box');
         const div = document.createElement('div');
         div.className = `msg ${type}`;
-        if(analysis) div.innerHTML = `<span class="analysis-tag">🤖 Phân tích tư duy: ${analysis}</span>${text}`;
+        if(analysis) div.innerHTML = `<span class="bot-tag">Phân tích chuyên sâu: ${analysis}</span>${text}`;
         else div.innerText = text;
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
     }
 
-    const aiLogic = {
-        "mệt mỏi": { ans: "Đó là dấu hiệu của 'Sự kiệt sức Dopamine'. Não bạn đã quen với cường độ kích thích cao.", ana: "Người dùng đang cảm nhận sự sụt giảm năng lượng tinh thần." },
-        "tập trung": { ans: "Khả năng tập trung sâu (Deep Work) bị hủy hoại bởi các video 15 giây. Hãy thử Pomodoro.", ana: "Người dùng quan tâm đến việc phục hồi chức năng điều hành." },
-        "tại sao": { ans: "Vì thuật toán MXH thiết kế để tối ưu hóa sự chú ý của bạn, khiến não luôn ở trạng thái 'săn lùng' dopamine.", ana: "Người dùng đang tìm kiếm nguyên nhân gốc rễ của hành vi." }
+    const expertKB = {
+        "dopamine": { 
+            ans: "Khi lướt video ngắn, não tiết ra Dopamine liên tục. Điều này làm trơ các thụ thể, khiến bạn cần kích thích mạnh hơn để thấy vui, dẫn đến sự xao nhãng trong học tập.",
+            ana: "Cơ chế sinh lý học thần kinh (Dopaminergic System)."
+        },
+        "hồi phục": {
+            ans: "Để hồi phục, bạn cần Digital Detox (ngắt kết nối) ít nhất 24h. Sau đó, hãy tập đọc sách giấy để ép não quay lại thói quen xử lý thông tin tuyến tính.",
+            ana: "Chiến lược can thiệp thói quen (Behavioral Intervention)."
+        },
+        "tập trung": {
+            ans: "Chỉ số Stroop của bạn cho thấy khả năng ức chế xung đột đang yếu. Hãy dùng Pomodoro (25-5) để rèn luyện lại cơ bắp tập trung.",
+            ana: "Phân tích hiệu suất nhận thức (Cognitive Performance)."
+        },
+        "gpa": {
+            ans: "Nghiên cứu của Khôi & Hoài Anh cho thấy Brain Rot tỷ lệ nghịch với GPA. Khi não quen với thông tin hời hợt, bạn sẽ khó tiêu hóa kiến thức học thuật phức tạp.",
+            ana: "Tương quan kết quả học tập (Academic Correlation)."
+        }
     };
 
-    function finalize() {
+    function showExpertChat() {
         document.getElementById('screen-test').classList.add('hidden');
         document.getElementById('screen-chat').classList.remove('hidden');
 
         const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
         const acc = (results.filter(r=>r.ok).length/total)*100;
-        const use = document.getElementById('usage').value;
+        bScore = Math.min(100, Math.round((avgRT/20) + (100-acc) + 20)); // Giả lập điểm từ RT và Acc
 
-        brainScore = Math.min(100, Math.round((use * 7) + (avgRT/25) + (100-acc)));
-        document.getElementById('final-score').innerText = brainScore + "%";
+        document.getElementById('score-tag').innerText = `Brain Score: ${bScore}%`;
 
-        addMsg(`Chào Khôi! Phân tích xong. Chỉ số Brain Rot của bạn là ${brainScore}%.`, 'bot');
+        addChat(`Chào bạn! Tôi là NeuroConsultant. Dựa trên bài test Stroop, Brain Score của bạn là ${bScore}%.`, 'bot');
         
-        if(brainScore > 50) {
-            addMsg("Dựa trên phản xạ, bạn đang gặp khó khăn trong việc ức chế xung đột. Bạn cảm thấy thế nào?", 'bot', "Phát hiện dấu hiệu suy giảm kiểm soát hành vi.");
-            showChips(["Tại sao tôi bị vậy?", "Tôi thấy mệt mỏi", "Cách tập trung lại?"]);
+        if(bScore > 50) {
+            addChat("Tôi nhận thấy phản xạ của bạn bị 'nhiễu' khá nhiều. Bạn có hay cảm thấy mất tập trung khi học không?", 'bot', "Phát hiện suy giảm khả năng kiểm soát tập trung.");
+            renderChips(["Tại sao tôi bị nhiễu?", "Cách hồi phục não bộ", "Dopamine là gì?"]);
         } else {
-            addMsg("Bạn có bộ não khá 'sạch'. Bạn muốn biết cách bảo vệ nó không?", 'bot', "Người dùng có nền tảng nhận thức ổn định.");
-            showChips(["Dopamine là gì?", "Cách đọc sách sâu"]);
+            addChat("Kết quả rất ấn tượng! Bộ não của bạn duy trì sự tập trung rất tốt trước các xung đột thông tin.", 'bot', "Năng lực nhận thức đạt trạng thái tối ưu.");
+            renderChips(["Cách duy trì phong độ", "Mối liên hệ với GPA"]);
         }
     }
 
-    function showChips(list) {
-        const c = document.getElementById('chips');
-        c.innerHTML = '';
-        list.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'chip';
-            div.innerText = item;
-            div.onclick = () => { addMsg(item, 'user'); processResponse(item); };
-            c.appendChild(div);
+    function renderChips(list) {
+        const c = document.getElementById('chips'); c.innerHTML = '';
+        list.forEach(txt => {
+            const btn = document.createElement('div'); btn.className = 'chip'; btn.innerText = txt;
+            btn.onclick = () => { addChat(txt, 'user'); processExpertResponse(txt); };
+            c.appendChild(btn);
         });
     }
 
-    function processResponse(input) {
-        const text = input.toLowerCase();
+    function processExpertResponse(input) {
+        const query = input.toLowerCase();
         let found = false;
-        
-        for (let key in aiLogic) {
-            if (text.includes(key)) {
-                setTimeout(() => addMsg(aiLogic[key].ans, 'bot', aiLogic[key].ana), 600);
+        for (let key in expertKB) {
+            if (query.includes(key)) {
+                setTimeout(() => addChat(expertKB[key].ans, 'bot', expertKB[key].ana), 600);
                 found = true; break;
             }
         }
-        
-        if(!found) setTimeout(() => addMsg("Câu hỏi này cho thấy bạn đang tò mò về cơ chế thần kinh. Tôi sẽ lưu dữ liệu này để nghiên cứu thêm!", 'bot', "Phát hiện nhu cầu tìm kiếm thông tin mới."), 600);
+        if(!found) setTimeout(() => addChat("Câu hỏi của bạn rất thú vị. Theo dữ liệu nghiên cứu, điều này liên quan đến việc 'tái cấu trúc neuron' khi tiếp xúc với MXH quá lâu.", 'bot', "Phân tích xu hướng tìm kiếm nhận thức."), 600);
     }
 
     function handleChat() {
-        const inp = document.getElementById('user-input');
-        if(!inp.value) return;
-        addMsg(inp.value, 'user');
-        processResponse(inp.value);
-        inp.value = '';
+        const input = document.getElementById('user-input');
+        if(!input.value) return;
+        addChat(input.value, 'user');
+        processExpertResponse(input.value);
+        input.value = '';
     }
 </script>
 </body>
