@@ -3,131 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan | Nghiên cứu Brain Rot Khánh Hòa</title>
+    <title>NeuroScan AI | Trợ lý Hồi phục Nhận thức</title>
     <style>
-        :root { --p: #6366f1; --s: #a855f7; --bg: #030712; --glass: rgba(17, 24, 39, 0.8); }
-        * { box-sizing: border-box; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        :root { --p: #6366f1; --bg: #030712; --glass: rgba(17, 24, 39, 0.9); }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg); color: white; margin: 0; 
-            display: flex; align-items: center; justify-content: center;
-            min-height: 100vh; overflow: hidden;
-        }
-
-        #app {
-            width: 100%; max-width: 480px; padding: 40px; border-radius: 40px;
-            background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,0.1); position: relative;
-            box-shadow: 0 0 80px rgba(0,0,0,0.5); text-align: center;
-        }
-
-        /* MÀN HÌNH CHỜ PHÂN TÍCH KHOA HỌC */
-        #screen-loading { padding: 10px; }
-        .brain-core {
-            width: 80px; height: 80px; background: var(--p); border-radius: 20px;
-            margin: 0 auto 30px; display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem; animation: pulse 1.5s infinite;
-            box-shadow: 0 0 30px var(--p);
-        }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-
-        .loading-header { font-weight: 800; font-size: 0.7rem; color: var(--p); letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
-        .info-text { 
-            font-size: 0.9rem; color: rgba(255,255,255,0.8); min-height: 4.5em; 
-            line-height: 1.6; text-align: left; background: rgba(0,0,0,0.2);
-            padding: 15px; border-radius: 15px; border-left: 3px solid var(--s);
-        }
-
-        /* GIAO DIỆN CHÍNH */
-        .project-title h1 { font-size: 1.5rem; font-weight: 800; margin: 0; color: white; }
-        .project-title p { font-size: 0.75rem; color: var(--s); margin-top: 5px; font-weight: 600; }
-
-        .input-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.05); text-align: left; }
-        .input-card label { font-size: 0.75rem; font-weight: 700; opacity: 0.6; }
+        #app { width: 100%; max-width: 500px; padding: 30px; border-radius: 30px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); position: relative; }
         
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 15px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--p); border-radius: 50%; cursor: pointer; }
+        /* Loading Screen */
+        .loader { width: 50px; height: 50px; border: 3px solid var(--p); border-top-color: transparent; border-radius: 50%; animation: spin 1s infinite; margin: 20px auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .btn-scan {
-            width: 100%; padding: 18px; border-radius: 18px; border: none;
-            background: linear-gradient(135deg, var(--p), var(--s));
-            color: white; font-weight: 800; cursor: pointer; margin-top: 10px;
-        }
+        /* Chat Interface */
+        .chat-container { height: 350px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
+        .bot { background: var(--p); color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { background: rgba(255,255,255,0.1); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        /* TEST & RESULT */
-        .stroop-box { font-size: 4rem; font-weight: 900; margin: 40px 0; }
-        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .ans-btn { padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: white; font-weight: 700; cursor: pointer; }
+        .suggestion-box { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        .suggest-btn { background: rgba(99, 102, 241, 0.2); border: 1px solid var(--p); color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; }
 
-        .score-circle { font-size: 3.5rem; font-weight: 900; color: var(--p); margin: 15px 0; }
-        .badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; }
+        .input-area { display: flex; gap: 10px; }
+        .chat-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none; }
+        .send-btn { background: var(--p); border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; color: white; font-weight: bold; }
+
         .hidden { display: none; }
+        .btn-main { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--p); color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="app">
     <div id="screen-loading">
-        <div class="brain-core">🧠</div>
-        <div class="loading-header">Hệ thống Phân tích Nhận thức</div>
-        <div class="info-text" id="info-box">Đang khởi tạo thuật toán nghiên cứu...</div>
-        <p style="font-size: 0.65rem; margin-top: 20px; opacity: 0.4;">© 2025 Dự án Brain Rot | Lê Quý Đôn Khánh Hòa</p>
+        <div class="loader"></div>
+        <h3 id="load-text" style="color:var(--p)">ĐANG KHỞI TẠO...</h3>
+        <p id="info-box" style="font-size: 0.85rem; opacity: 0.7; line-height: 1.6;"></p>
     </div>
 
     <div id="screen-main" class="hidden">
-        <div class="project-title">
-            <h1>NEURO-SCAN AI</h1>
-            <p>DỰ ÁN NGHIÊN CỨU BRAIN ROT - KHÁNH HÒA</p>
+        <h2 style="margin:0">NeuroScan AI</h2>
+        <p style="font-size: 0.7rem; color:var(--p); margin-bottom: 20px;">DỰ ÁN NGHIÊN CỨU LÊ QUÝ ĐÔN</p>
+        <div style="text-align: left; margin-bottom: 15px;">
+            <label style="font-size: 0.8rem; opacity:0.6">Thời gian dùng Reels/TikTok (giờ/ngày):</label>
+            <input type="range" id="usage" min="0" max="10" step="1" value="3" style="width:100%">
+            <div style="text-align: right; color:var(--p); font-weight: bold;"><span id="u-val">3</span>h</div>
         </div>
-        
-        <div class="input-card">
-            <label>Thời gian lướt TikTok/Reels (Giờ/Ngày)</label>
-            <input type="range" id="usage" min="0" max="10" step="1" value="3">
-            <div style="text-align: right; margin-top: 10px; font-weight: 800; color: var(--p);"><span id="u-val">3</span>h</div>
-        </div>
-
-        <div class="input-card">
-            <label>Khả năng học tập trung (1-10)</label>
-            <input type="range" id="focus" min="1" max="10" value="6">
-            <div style="text-align: right; margin-top: 10px; font-weight: 800; color: var(--s);"><span id="f-val">6</span>/10</div>
-        </div>
-
-        <button class="btn-scan" onclick="startTest()">QUÉT CHỈ SỐ NÃO BỘ</button>
+        <button class="btn-main" onclick="startTest()">BẮT ĐẦU CHẨN ĐOÁN</button>
     </div>
 
     <div id="screen-test" class="hidden">
-        <div style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 1px;">CHỌN MÀU SẮC - BỎ QUA CHỮ</div>
-        <div id="word" class="stroop-box">---</div>
-        <div class="ans-grid" id="options"></div>
+        <div id="word" style="font-size: 3.5rem; font-weight: 900; margin: 30px 0;">---</div>
+        <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
     </div>
 
     <div id="screen-result" class="hidden">
-        <div id="status-badge" class="badge" style="background: var(--p);">PHÂN TÍCH HOÀN TẤT</div>
-        <div class="score-circle" id="score-display">0%</div>
-        <div id="diag-msg" style="font-size: 0.85rem; line-height: 1.6; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: left; border-bottom: 3px solid var(--p);"></div>
-        <button class="btn-scan" onclick="location.reload()" style="background: rgba(255,255,255,0.1); margin-top: 20px;">THỰC HIỆN LẠI</button>
+        <div style="background: rgba(99, 102, 241, 0.1); padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--p);">
+            <div id="score-label" style="font-weight: 800; font-size: 1.1rem;">Brain Score: --%</div>
+        </div>
+
+        <div class="chat-container" id="chat-box">
+            </div>
+
+        <div class="suggestion-box" id="suggestions"></div>
+
+        <div class="input-area">
+            <input type="text" id="user-input" class="chat-input" placeholder="Hỏi tôi bất cứ điều gì...">
+            <button class="send-btn" onclick="handleUserInput()">GỬI</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // NỘI DUNG DỰA TRÊN BÁO CÁO CỦA KHÔI
-    const researchFacts = [
-        "Brain Rot là hiện tượng suy giảm nhận thức do nội dung số chất lượng thấp.",
-        "Tiếp xúc quá mức với Video ngắn làm xáo trộn hệ thống thưởng Dopamine.",
-        "Nghiên cứu tại Khánh Hòa cho thấy mối tương quan giữa thời gian lướt và GPA.",
-        "Thuật toán Brain Rot Score (0-100%) lượng hóa mức độ ảnh hưởng thần kinh.",
-        "Ứng dụng dựa trên Neuropsychology để đề xuất giải pháp can thiệp thói quen số.",
-        "Chuẩn bị quét phản xạ Stroop để đo lường khả năng ức chế xung đột..."
+    // 1. MÀN HÌNH CHỜ & KIẾN THỨC (Dựa trên báo cáo)
+    const facts = [
+        "Brain Rot là hiện tượng suy giảm nhận thức do tiếp xúc quá mức với nội dung số ngắn.",
+        "Thuật toán của chúng tôi lượng hóa Brain Score dựa trên thời gian thực tế và phản xạ thần kinh.",
+        "Mục tiêu dự án: Đề xuất giải pháp can thiệp thói quen số cho giới trẻ Khánh Hòa."
     ];
-
-    let factIdx = 0;
+    let fIdx = 0;
     function runFacts() {
-        const infoBox = document.getElementById('info-box');
-        if (factIdx < researchFacts.length) {
-            infoBox.innerText = researchFacts[factIdx];
-            factIdx++;
-            setTimeout(runFacts, 1500); // Mỗi câu hiện 1.5 giây
+        if(fIdx < facts.length) {
+            document.getElementById('info-box').innerText = facts[fIdx++];
+            setTimeout(runFacts, 1800);
         } else {
             document.getElementById('screen-loading').classList.add('hidden');
             document.getElementById('screen-main').classList.remove('hidden');
@@ -135,11 +92,11 @@
     }
     runFacts();
 
+    // 2. LOGIC TEST STROOP
     const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
-    let results = [], current = 0, total = 12, startTime;
+    let results = [], current = 0, total = 10, startTime, finalScore = 0;
 
     document.getElementById('usage').oninput = function() { document.getElementById('u-val').innerText = this.value; }
-    document.getElementById('focus').oninput = function() { document.getElementById('f-val').innerText = this.value; }
 
     function startTest() {
         document.getElementById('screen-main').classList.add('hidden');
@@ -156,12 +113,30 @@
         const g = document.getElementById('options'); g.innerHTML = '';
         [...colors].sort(()=>Math.random()-0.5).forEach(c => {
             const b = document.createElement('button');
-            b.className = 'ans-btn'; b.innerText = c.n;
+            b.style.padding = "15px"; b.style.borderRadius = "12px"; b.style.border = "none";
+            b.innerText = c.n; b.style.fontWeight = "bold";
             b.onclick = () => { results.push({ok: c.v === colors[cIdx].v, rt: Date.now()-startTime}); current++; next(); };
             g.appendChild(b);
         });
         startTime = Date.now();
     }
+
+    // 3. LOGIC CHATBOT TỰ ĐỘNG
+    function addMsg(text, type) {
+        const box = document.getElementById('chat-box');
+        const div = document.createElement('div');
+        div.className = `msg ${type}`;
+        div.innerText = text;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    const kb = {
+        "dopamine": "Dopamine là chất dẫn truyền thần kinh tạo cảm giác hưng phấn. Video ngắn tạo ra 'vòng lặp dopamine' khiến bạn nghiện và giảm khả năng tập trung sâu.",
+        "pomodoro": "Kỹ thuật Pomodoro (học 25p, nghỉ 5p) giúp não bộ hồi phục khả năng tập trung sau khi bị 'Brain Rot'.",
+        "detox": "Digital Detox là việc ngắt kết nối hoàn toàn với mạng xã hội trong 24-48h để 'reset' lại hệ thống thưởng của não bộ.",
+        "nguyên nhân": "Nguyên nhân chính là thuật toán cá nhân hóa nội dung quá nhanh, khiến não không có thời gian xử lý thông tin sâu."
+    };
 
     function finalize() {
         document.getElementById('screen-test').classList.add('hidden');
@@ -169,24 +144,51 @@
 
         const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
         const acc = (results.filter(r=>r.ok).length/total)*100;
-        const use = parseFloat(document.getElementById('usage').value);
-        const foc = parseInt(document.getElementById('focus').value);
+        const use = document.getElementById('usage').value;
 
-        // Công thức Brain Rot Score khớp với đề cương của Khôi
-        let score = Math.round((use * 6) + ((10-foc)*4) + (avgRT/25) + (100-acc));
-        score = Math.min(100, Math.max(0, score));
+        finalScore = Math.min(100, Math.round((use * 8) + (avgRT/20) + (100-acc)));
+        document.getElementById('score-label').innerText = `Chỉ số Brain Rot: ${finalScore}%`;
 
-        document.getElementById('score-display').innerText = score + "%";
-        const msg = document.getElementById('diag-msg');
-
-        if(score > 60) {
-            msg.innerHTML = "<b>Chẩn đoán:</b> Mức độ ảnh hưởng cao. Dopamine bị bão hòa làm suy giảm khả năng tập trung sâu. <br><b>Đề xuất:</b> Digital Detox 24h và áp dụng Pomodoro.";
+        addMsg(`Chào bạn, tôi đã phân tích xong. Chỉ số của bạn là ${finalScore}%.`, 'bot');
+        
+        if(finalScore > 50) {
+            addMsg("Bạn đang có dấu hiệu suy giảm nhận thức nhẹ. Bạn muốn tôi tư vấn cách hồi phục không?", 'bot');
+            showSuggestions(["Cách hồi phục?", "Dopamine là gì?", "Kỹ thuật Pomodoro"]);
         } else {
-            msg.innerHTML = "<b>Chẩn đoán:</b> Nhận thức ổn định. Bạn đang kiểm soát tốt thói quen sử dụng mạng xã hội. <br><b>Đề xuất:</b> Tiếp tục duy trì thói quen đọc sách giấy.";
+            addMsg("Kết quả của bạn khá tốt! Hãy duy trì thói quen lành mạnh nhé.", 'bot');
+            showSuggestions(["Tại sao tôi bị nghiện?", "Cách đọc sách sâu"]);
         }
+    }
 
-        // Gửi dữ liệu đồng bộ với file CSV nghiên cứu
-        fetch('URL_CỦA_KHÔI', { method: 'POST', body: JSON.stringify({usage: use, rt: avgRT, accuracy: acc, score: score}) });
+    function showSuggestions(list) {
+        const box = document.getElementById('suggestions');
+        box.innerHTML = '';
+        list.forEach(item => {
+            const b = document.createElement('button');
+            b.className = 'suggest-btn';
+            b.innerText = item;
+            b.onclick = () => { addMsg(item, 'user'); processAI(item); };
+            box.appendChild(b);
+        });
+    }
+
+    function processAI(input) {
+        const text = input.toLowerCase();
+        let response = "Tôi chưa hiểu ý bạn, bạn có thể hỏi về Dopamine, Pomodoro hoặc Digital Detox nhé!";
+        
+        for (let key in kb) {
+            if (text.includes(key)) { response = kb[key]; break; }
+        }
+        
+        setTimeout(() => addMsg(response, 'bot'), 600);
+    }
+
+    function handleUserInput() {
+        const input = document.getElementById('user-input');
+        if(!input.value) return;
+        addMsg(input.value, 'user');
+        processAI(input.value);
+        input.value = '';
     }
 </script>
 </body>
