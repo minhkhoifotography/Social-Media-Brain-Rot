@@ -3,66 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Rot Research Tool | LMK Project</title>
+    <title>Brain Rot Analysis | Advanced Research Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --bg: #f8fafc;
-            --text: #1e293b;
+            --accent: #6366f1;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        #app { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, var(--bg-dark));
+            color: var(--text-main);
+            margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #app {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2.5rem;
+            border-radius: 24px;
+            width: 90%; max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
+        .survey-group { text-align: left; margin: 1.5rem 0; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; opacity: 0.9; }
+        
+        /* Input & Button Styling */
+        input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+        .btn {
+            background: var(--accent); color: white; border: none;
+            padding: 14px 28px; border-radius: 12px; font-weight: 600;
+            cursor: pointer; width: 100%; transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+        
+        /* Stroop Test Area */
+        .stroop-container { height: 120px; display: flex; align-items: center; justify-content: center; }
+        .stroop-word { font-size: 4rem; font-weight: 800; letter-spacing: -2px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 2rem; }
+        .color-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 16px; border-radius: 14px; cursor: pointer; font-weight: 700;
+            transition: background 0.2s; color: white;
+        }
+        .color-btn:hover { background: rgba(255,255,255,0.15); }
         .hidden { display: none; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: 0.3s; margin-top: 1rem; }
-        .btn:hover { opacity: 0.9; }
-        .stroop-word { font-size: 3rem; font-weight: bold; margin: 2rem 0; height: 80px; }
-        .options { display: grid; grid-template-columns: 1-1; gap: 10px; margin-top: 1rem; }
-        .color-btn { border: 2px solid #e2e8f0; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        progress { width: 100%; height: 10px; border-radius: 5px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 2rem; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
     </style>
 </head>
 <body>
 
 <div id="app">
     <div id="screen-survey">
-        <h2>Khảo sát Hành vi</h2>
-        <p>Bạn dành bao nhiêu tiếng cho Video ngắn (TikTok/Reels) mỗi ngày?</p>
-        <input type="range" id="usage-range" min="0" max="10" step="1" value="2" style="width:100%">
-        <p><span id="usage-val">2</span> giờ</p>
+        <h2>Phân tích Nhận thức</h2>
+        <p style="opacity: 0.7; font-size: 0.9rem;">Dự án nghiên cứu Brain Rot - Lê Quý Đôn High School</p>
+        
+        <div class="survey-group">
+            <label>1. Thời gian tiêu thụ Video ngắn hàng ngày (giờ):</label>
+            <input type="range" id="usage-range" min="0" max="10" step="0.5" value="2">
+            <div style="text-align: right; font-weight: bold;"><span id="usage-val">2</span>h</div>
+        </div>
+
+        <div class="survey-group">
+            <label>2. Tần suất "lướt qua" video trong 3 giây đầu tiên?</label>
+            <select id="scroll-behavior" class="btn" style="background: rgba(255,255,255,0.05); text-align: left;">
+                <option value="1">Rất hiếm khi (Xem kỹ)</option>
+                <option value="2">Thỉnh thoảng</option>
+                <option value="3">Thường xuyên (Lướt liên tục)</option>
+                <option value="4">Liên tục (Không thể dừng lại)</option>
+            </select>
+        </div>
+
+        <div class="survey-group">
+            <label>3. Bạn có thấy khó khăn khi đọc sách > 10 trang?</label>
+            <input type="range" id="focus-reading" min="1" max="5" value="3">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.6;">
+                <span>Dễ dàng</span><span>Cực khó</span>
+            </div>
+        </div>
+
         <button class="btn" onclick="startTest()">Bắt đầu Test Nhận Thức</button>
     </div>
 
     <div id="screen-test" class="hidden">
-        <p>Chọn <b>MÀU SẮC</b> của chữ, không phải đọc chữ!</p>
-        <progress id="test-progress" value="0" max="10"></progress>
-        <div id="stroop-display" class="stroop-word"></div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Nhấn vào <b>MÀU SẮC</b> bạn thấy, bỏ qua nội dung chữ!</p>
+        <div class="stroop-container">
+            <div id="stroop-display" class="stroop-word"></div>
+        </div>
         <div class="options" id="color-options"></div>
     </div>
 
     <div id="screen-result" class="hidden">
-        <h2>Kết quả của bạn</h2>
-        <div id="final-stats" style="text-align: left; margin: 1rem 0;"></div>
-        <button class="btn" onclick="location.reload()">Làm lại</button>
+        <h2>Phân tích Hoàn tất</h2>
+        <div id="final-stats" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; margin: 1.5rem 0;">
+            </div>
+        <button class="btn" onclick="location.reload()">Làm lại khảo sát</button>
     </div>
 </div>
 
 <script>
     const colors = [
-        { name: "ĐỎ", value: "#ff0000" },
-        { name: "XANH DƯƠNG", value: "#0000ff" },
-        { name: "XANH LÁ", value: "#008000" },
-        { name: "VÀNG", value: "#facc15" }
+        { name: "ĐỎ", value: "#ff4757" },
+        { name: "XANH", value: "#2e86de" },
+        { name: "LÁ", value: "#2ecc71" },
+        { name: "VÀNG", value: "#f1c40f" }
     ];
 
     let currentTrial = 0;
-    const maxTrials = 10;
+    const maxTrials = 12; // Tăng số lần để độ chính xác cao hơn
     let results = [];
     let startTime;
+    const scriptURL = 'URL_CỦA_KHÔI_Ở_ĐÂY';
 
-    // Cập nhật hiển thị giờ
-    document.getElementById('usage-range').oninput = function() {
-        document.getElementById('usage-val').innerText = this.value;
-    }
+    document.getElementById('usage-range').oninput = function() { document.getElementById('usage-val').innerText = this.value; }
 
     function startTest() {
         document.getElementById('screen-survey').classList.add('hidden');
@@ -71,16 +131,13 @@
     }
 
     function nextTrial() {
-        if (currentTrial >= maxTrials) {
-            showResults();
-            return;
-        }
-
+        if (currentTrial >= maxTrials) { showResults(); return; }
+        
+        document.getElementById('progress-fill').style.width = (currentTrial / maxTrials * 100) + '%';
         const display = document.getElementById('stroop-display');
         const options = document.getElementById('color-options');
         options.innerHTML = '';
 
-        // Tạo sự xung đột (Incongruent)
         const textIdx = Math.floor(Math.random() * colors.length);
         let colorIdx;
         do { colorIdx = Math.floor(Math.random() * colors.length); } while (colorIdx === textIdx);
@@ -88,62 +145,67 @@
         display.innerText = colors[textIdx].name;
         display.style.color = colors[colorIdx].value;
 
-        // Tạo nút bấm
-        colors.forEach((c, index) => {
-            const btn = document.createElement('div');
+        // Shuffle buttons để người dùng không bấm theo quán tính
+        const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
+        
+        shuffledColors.forEach((c) => {
+            const btn = document.createElement('button');
             btn.className = 'color-btn';
             btn.innerText = c.name;
-            btn.onclick = () => handleAnswer(colorIdx === index);
+            btn.onclick = () => handleAnswer(c.value === colors[colorIdx].value);
             options.appendChild(btn);
         });
 
         startTime = Date.now();
-        document.getElementById('test-progress').value = currentTrial;
     }
 
     function handleAnswer(isCorrect) {
-        const responseTime = Date.now() - startTime;
-        results.push({ isCorrect, responseTime });
+        results.push({ isCorrect, rt: Date.now() - startTime });
         currentTrial++;
         nextTrial();
     }
 
-        function showResults() {
-    document.getElementById('screen-test').classList.add('hidden');
-    document.getElementById('screen-result').classList.remove('hidden');
+    async function showResults() {
+        document.getElementById('screen-test').classList.add('hidden');
+        document.getElementById('screen-result').classList.remove('hidden');
 
-    const avgRT = results.reduce((a, b) => a + b.responseTime, 0) / maxTrials;
-    const accuracy = (results.filter(r => r.isCorrect).length / maxTrials) * 100;
-    const usage = document.getElementById('usage-range').value;
-    
-    let advice = (avgRT > 1000 || accuracy < 80) ? "Cảnh báo Brain Rot" : "Tập trung tốt";
+        const avgRT = results.reduce((a, b) => a + b.rt, 0) / maxTrials;
+        const accuracy = (results.filter(r => r.isCorrect).length / maxTrials) * 100;
+        const usage = document.getElementById('usage-range').value;
+        const scrollScore = document.getElementById('scroll-behavior').value;
+        const readingFocus = document.getElementById('focus-reading').value;
 
-    // Hiển thị lên màn hình
-    document.getElementById('final-stats').innerHTML = `
-        <p>Đang gửi dữ liệu nghiên cứu...</p>
-    `;
+        document.getElementById('final-stats').innerHTML = `<p>⏳ Đang đồng bộ hóa với hệ thống AI...</p>`;
 
-    // GỬI DỮ LIỆU LÊN DATABASE (Google Sheets)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwrSFijRQtYcYB5qHT4mi0nthMQKuRafs-qAqb31Flq-ZnRwcQ7HevPJpNDrX4j2DY/exec';
-    
-    fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({
+        // Gửi dữ liệu nâng cao lên Sheet
+        const dataToUpload = {
             usage: usage,
             avgRT: avgRT.toFixed(0),
-            accuracy: accuracy,
-            advice: advice
-        })
-    })
-    .then(response => {
-        document.getElementById('final-stats').innerHTML = `
-            <p>✅ Đã lưu dữ liệu thành công!</p>
-            <p><b>Tốc độ phản xạ:</b> ${avgRT.toFixed(0)} ms</p>
-            <p><b>Độ chính xác:</b> ${accuracy}%</p>
-        `;
-    })
-    .catch(error => console.error('Lỗi!', error.message));
-}
+            accuracy: accuracy.toFixed(1),
+            scroll: scrollScore,
+            reading: readingFocus,
+            advice: accuracy < 80 ? "Nguy cơ cao" : "Ổn định"
+        };
+
+        try {
+            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(dataToUpload) });
+            document.getElementById('final-stats').innerHTML = `
+                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Phản xạ:</span> <b>${avgRT.toFixed(0)} ms</b>
+                </div>
+                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Độ chính xác:</span> <b>${accuracy}%</b>
+                </div>
+                <hr style="opacity:0.1">
+                <p style="font-size: 0.9rem; line-height: 1.4; margin-top: 10px;">
+                    <b>Nhận xét sơ bộ:</b> Não bộ của bạn đang phản ứng với tốc độ 
+                    ${avgRT < 800 ? 'nhanh' : 'trung bình'}. Dữ liệu này đã được gửi vào bộ lọc Machine Learning của dự án.
+                </p>
+            `;
+        } catch (e) {
+            document.getElementById('final-stats').innerHTML = `<p>Lỗi kết nối. Vui lòng kiểm tra URL Script.</p>`;
+        }
+    }
 </script>
 </body>
 </html>
