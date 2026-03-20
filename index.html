@@ -3,67 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroScan Pro | LMK & LHA Research</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>NeuroScan | Dự án Nghiên cứu Brain Rot - Lê Quý Đôn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6366f1; --s: #a855f7; --bg: #030712; --glass: rgba(17, 24, 39, 0.8); }
         * { box-sizing: border-box; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white;
-            margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        /* Hiệu ứng nền động */
-        body::before {
-            content: ""; position: absolute; width: 300px; height: 300px; background: var(--p);
-            filter: blur(150px); top: -50px; left: -50px; opacity: 0.3; z-index: -1;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--bg); color: white; margin: 0; 
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; overflow: hidden;
         }
 
         #app {
             width: 100%; max-width: 480px; padding: 40px; border-radius: 40px;
             background: var(--glass); backdrop-filter: blur(25px);
             border: 1px solid rgba(255,255,255,0.1); position: relative;
-            box-shadow: 0 0 80px rgba(0,0,0,0.5);
+            box-shadow: 0 0 80px rgba(0,0,0,0.5); text-align: center;
         }
 
-        /* MÀN HÌNH CHỜ (SCANNING) */
-        #screen-loading { text-align: center; }
-        .brain-loader {
-            width: 120px; height: 120px; border: 4px solid var(--p); border-radius: 50%;
+        /* MÀN HÌNH CHỜ Ý NGHĨA */
+        #screen-loading { padding: 20px; }
+        .scanner-circle {
+            width: 100px; height: 100px; border: 3px solid var(--p); border-radius: 50%;
             margin: 0 auto 30px; border-top-color: transparent;
             animation: spin 1s linear infinite; position: relative;
         }
-        .brain-loader::after {
-            content: "🧠"; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); font-size: 2.5rem;
-        }
+        .scanner-circle::after { content: "🧠"; position: absolute; top: 25px; left: 25px; font-size: 2.5rem; animation: pulse 1.5s infinite; }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.1); } 100% { transform: scale(0.9); } }
+
+        .loading-title { font-weight: 800; font-size: 1.2rem; color: var(--p); margin-bottom: 10px; }
+        .typing-text { font-size: 0.85rem; color: rgba(255,255,255,0.6); min-height: 3em; line-height: 1.5; }
 
         /* GIAO DIỆN CHÍNH */
-        h1 { font-size: 1.6rem; font-weight: 800; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .tagline { font-size: 0.7rem; letter-spacing: 2px; opacity: 0.5; margin-bottom: 30px; }
-        
-        .card-input { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 25px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .card-input:hover { background: rgba(255,255,255,0.07); border-color: var(--p); }
+        .header-project h1 { font-size: 1.6rem; font-weight: 800; color: white; margin: 0; letter-spacing: -1px; }
+        .header-project p { font-size: 0.7rem; color: var(--p); font-weight: 600; letter-spacing: 2px; margin-top: 5px; }
+
+        .card-clinical { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        .card-clinical label { font-size: 0.75rem; font-weight: 700; opacity: 0.5; text-transform: uppercase; }
         
         input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 15px; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--p); border-radius: 50%; cursor: pointer; box-shadow: 0 0 15px var(--p); }
 
-        .btn-glow {
-            width: 100%; padding: 20px; border-radius: 20px; border: none;
+        .btn-action {
+            width: 100%; padding: 18px; border-radius: 18px; border: none;
             background: linear-gradient(135deg, var(--p), var(--s));
-            color: white; font-weight: 800; font-size: 1rem; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); margin-top: 20px;
+            color: white; font-weight: 800; cursor: pointer; margin-top: 20px;
         }
-        .btn-glow:active { transform: scale(0.96); }
 
-        /* KẾT QUẢ SỐNG ĐỘNG */
-        .level-meter { height: 10px; width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        #level-fill { height: 100%; width: 0%; background: var(--p); }
-        
-        .status-badge { display: inline-block; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; font-weight: 800; margin-bottom: 20px; }
-        .bad { background: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
-        .good { background: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+        /* STROOP TEST */
+        .stroop-word { font-size: 4rem; font-weight: 900; margin: 40px 0; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .ans-btn { padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: white; font-weight: 700; cursor: pointer; }
+
+        /* KẾT QUẢ */
+        .score-box { font-size: 3rem; font-weight: 900; color: var(--p); margin: 20px 0; }
+        .status-tag { display: inline-block; padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        .tag-danger { background: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .tag-safe { background: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
 
         .hidden { display: none; }
     </style>
@@ -72,71 +72,77 @@
 
 <div id="app">
     <div id="screen-loading">
-        <div class="brain-loader"></div>
-        <h2 id="loading-text">INITIALIZING NEURAL LINK...</h2>
-        <p style="opacity: 0.5; font-size: 0.8rem;">Đang thiết lập kết nối dữ liệu Khánh Hòa</p>
+        <div class="scanner-circle"></div>
+        <div class="loading-title">NEUROSCAN INITIALIZING</div>
+        <div class="typing-text" id="typewriter"></div>
     </div>
 
     <div id="screen-main" class="hidden">
-        <div style="text-align: center;">
+        <div class="header-project">
             <h1>NEURO-SCAN AI</h1>
-            <p class="tagline">HỘI THỊ KHKT - KHÁNH HÒA 2025</p>
+            <p>DỰ ÁN NGHIÊN CỨU BRAIN ROT | KHÁNH HÒA</p>
         </div>
-
-        <div class="card-input">
-            <small style="opacity: 0.6;">THỜI GIAN "LƯỚT" MỖI NGÀY</small>
+        
+        <div class="card-clinical">
+            <label>Thời gian dùng MXH (Giờ/Ngày)</label>
             <input type="range" id="usage" min="0" max="10" step="1" value="3">
-            <div style="text-align: right; color: var(--p); font-weight: 800; margin-top: 10px;"><span id="u-val">3</span>h</div>
+            <div style="text-align: right; margin-top: 8px; font-weight: 800; color: var(--p);"><span id="u-val">3</span>h</div>
         </div>
 
-        <div class="card-input">
-            <small style="opacity: 0.6;">KHẢ NĂNG ĐỌC SÂU (TỰ ĐÁNH GIÁ)</small>
-            <input type="range" id="focus" min="1" max="10" value="7">
-            <div style="text-align: right; color: var(--s); font-weight: 800; margin-top: 10px;"><span id="f-val">7</span>/10</div>
+        <div class="card-clinical">
+            <label>Mức độ xao nhãng học tập (1-10)</label>
+            <input type="range" id="focus" min="1" max="10" value="5">
+            <div style="text-align: right; margin-top: 8px; font-weight: 800; color: var(--s);"><span id="f-val">5</span>/10</div>
         </div>
 
-        <button class="btn-glow" onclick="startNeuroTest()">BẮT ĐẦU QUÉT NÃO BỘ</button>
+        <button class="btn-action" onclick="startTest()">QUÉT NÃO BỘ NGAY</button>
     </div>
 
     <div id="screen-test" class="hidden">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <div id="test-timer" style="font-weight: 800; color: var(--p);">00:00</div>
-            <p style="font-size: 0.8rem; opacity: 0.6;">CHỌN MÀU SẮC - BỎ QUA CHỮ</p>
-        </div>
-        <div id="word" style="font-size: 4rem; font-weight: 900; text-align: center; margin: 40px 0;">---</div>
-        <div id="options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;"></div>
+        <div style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;">QUY TẮC: CHỌN MÀU SẮC - BỎ QUA CHỮ</div>
+        <div id="word" class="stroop-word">---</div>
+        <div class="ans-grid" id="options"></div>
     </div>
 
     <div id="screen-result" class="hidden">
-        <div id="status-badge" class="status-badge">LEVEL: UNKNOWN</div>
-        <h2 id="diag-title" style="margin: 0 0 10px 0;">CHẨN ĐOÁN</h2>
-        <p id="diag-desc" style="font-size: 0.9rem; opacity: 0.7; line-height: 1.6;"></p>
-        
-        <div class="level-meter"><div id="level-fill"></div></div>
-
-        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: left;">
-            <small style="color: var(--p); font-weight: 800;">LỘ TRÌNH CAN THIỆP</small>
-            <div id="rx-list" style="font-size: 0.85rem; margin-top: 10px; line-height: 1.5;"></div>
-        </div>
-
-        <button class="btn-glow" onclick="location.reload()" style="background: rgba(255,255,255,0.1); margin-top: 30px;">THỰC HIỆN LẠI</button>
+        <div id="tag" class="status-tag">LEVEL: EVALUATING</div>
+        <div class="score-box" id="score-display">0%</div>
+        <div id="diag-msg" style="font-size: 0.9rem; line-height: 1.6; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: left;"></div>
+        <button class="btn-action" onclick="location.reload()" style="background: rgba(255,255,255,0.1);">THỰC HIỆN LẠI</button>
     </div>
 </div>
 
 <script>
-    // Khởi tạo màn hình chờ
-    setTimeout(() => {
-        document.getElementById('screen-loading').classList.add('hidden');
-        document.getElementById('screen-main').classList.remove('hidden');
-    }, 2500);
+    // Xử lý hiệu ứng chữ chạy màn hình chờ
+    const messages = [
+        "Đang phân tích dữ liệu Dopamine...",
+        "Đang đánh giá tác động của video ngắn...",
+        "Dự án bởi Lưu Minh Khôi & Lê Hoài Anh.",
+        "Mục tiêu: Cải thiện sức khỏe tâm thần số.",
+        "Chuẩn bị quét phản xạ thần kinh..."
+    ];
+    let msgIdx = 0;
+    function typeWriter() {
+        const el = document.getElementById('typewriter');
+        if (msgIdx < messages.length) {
+            el.innerText = messages[msgIdx];
+            msgIdx++;
+            setTimeout(typeWriter, 1200);
+        } else {
+            document.getElementById('screen-loading').classList.add('hidden');
+            document.getElementById('screen-main').classList.remove('hidden');
+        }
+    }
+    typeWriter();
 
+    // Logic xử lý App
     const colors = [{n:"ĐỎ",v:"#ff4757"}, {n:"XANH",v:"#2e86de"}, {n:"LÁ",v:"#2ecc71"}, {n:"VÀNG",v:"#ffa502"}];
     let results = [], current = 0, total = 12, startTime;
 
     document.getElementById('usage').oninput = function() { document.getElementById('u-val').innerText = this.value; }
     document.getElementById('focus').oninput = function() { document.getElementById('f-val').innerText = this.value; }
 
-    function startNeuroTest() {
+    function startTest() {
         document.getElementById('screen-main').classList.add('hidden');
         document.getElementById('screen-test').classList.remove('hidden');
         next();
@@ -149,15 +155,11 @@
         
         const d = document.getElementById('word');
         d.innerText = colors[tIdx].n; d.style.color = colors[cIdx].v;
-        d.style.transform = "scale(0.8)"; 
-        setTimeout(() => d.style.transform = "scale(1)", 50);
 
         const g = document.getElementById('options'); g.innerHTML = '';
         [...colors].sort(()=>Math.random()-0.5).forEach(c => {
             const b = document.createElement('button');
-            b.style.padding = "20px"; b.style.borderRadius = "15px"; b.style.border = "1px solid rgba(255,255,255,0.1)";
-            b.style.background = "rgba(255,255,255,0.02)"; b.style.color = "white"; b.style.fontWeight = "800";
-            b.innerText = c.n;
+            b.className = 'ans-btn'; b.innerText = c.n;
             b.onclick = () => { results.push({ok: c.v === colors[cIdx].v, rt: Date.now()-startTime}); current++; next(); };
             g.appendChild(b);
         });
@@ -170,39 +172,28 @@
 
         const avgRT = results.reduce((a,b)=>a+b.rt,0)/total;
         const acc = (results.filter(r=>r.ok).length/total)*100;
-        const usage = parseFloat(document.getElementById('usage').value);
-        const focus = parseInt(document.getElementById('focus').value);
+        const use = parseFloat(document.getElementById('usage').value);
+        const foc = parseInt(document.getElementById('focus').value);
 
-        // Công thức Brain Rot Score (Lấy cảm hứng từ file PDF báo cáo)
-        let score = Math.round((usage * 7) + ((10-focus)*5) + (avgRT/20) + (100-acc));
-        score = Math.min(100, score);
+        // Công thức Brain Rot Score tối ưu
+        let score = Math.round((use * 6) + ((10-foc)*4) + (avgRT/25) + (100-acc));
+        score = Math.min(100, Math.max(0, score));
 
-        const fill = document.getElementById('level-fill');
-        const badge = document.getElementById('status-badge');
-        fill.style.width = score + "%";
+        document.getElementById('score-display').innerText = score + "%";
+        
+        const tag = document.getElementById('tag');
+        const msg = document.getElementById('diag-msg');
 
-        let diag = "", rx = "", status = "";
-
-        if(score > 75) {
-            status = "DANGER: CRITICAL BRAIN ROT"; badge.className = "status-badge bad";
-            diag = "Não bộ của bạn đang trong tình trạng 'bão hòa dopamine'. Khả năng ức chế xung đột suy giảm nặng.";
-            rx = "• Xóa ngay các ứng dụng Video ngắn 48h.<br>• Áp dụng quy tắc 20-20-20 cho mắt và não.<br>• Thiền định 10 phút để tái thiết lập neuron.";
-        } else if (score > 40) {
-            status = "WARNING: COGNITIVE DECLINE"; badge.className = "status-badge"; badge.style.background = "#f59e0b";
-            diag = "Dấu hiệu mệt mỏi kỹ thuật số rõ rệt. Sự tập trung đang bị bào mòn bởi thói quen lướt vô thức.";
-            rx = "• Giới hạn thời gian sử dụng 1h/ngày.<br>• Đọc ít nhất 5 trang sách giấy mỗi tối.<br>• Tắt thông báo vào khung giờ học tập.";
+        if(score > 65) {
+            tag.innerText = "LEVEL: BRAIN ROT CRITICAL"; tag.className = "status-tag tag-danger";
+            msg.innerHTML = "<b>Cảnh báo:</b> Hệ thống nhận diện mức độ suy giảm nhận thức cao. Khả năng kiểm soát dopamine yếu. Cần thực hiện Digital Detox ngay.";
         } else {
-            status = "OPTIMAL: NEURAL BALANCE"; badge.className = "status-badge good";
-            diag = "Trạng thái nhận thức lý tưởng. Bạn có khả năng kiểm soát thói quen số cực kỳ tốt.";
-            rx = "• Duy trì các thói quen lành mạnh.<br>• Thử thách não bộ với các ngôn ngữ lập trình hoặc ngoại ngữ mới.";
+            tag.innerText = "LEVEL: OPTIMAL FOCUS"; tag.className = "status-tag tag-safe";
+            msg.innerHTML = "<b>Chúc mừng:</b> Bạn đang duy trì được sự minh mẫn. Hãy tiếp tục bảo vệ bộ não trước các nội dung số chất lượng thấp.";
         }
 
-        badge.innerText = status;
-        document.getElementById('diag-desc').innerHTML = diag;
-        document.getElementById('rx-list').innerHTML = rx;
-        
-        // Gửi data về Sheets
-        fetch('URL_CỦA_KHÔI', { method: 'POST', body: JSON.stringify({usage, avgRT, acc, score}) });
+        // Gửi dữ liệu về Sheets (Khôi thay URL của bạn vào)
+        fetch('URL_CỦA_KHÔI', { method: 'POST', body: JSON.stringify({usage: use, rt: avgRT, score: score}) });
     }
 </script>
 </body>
