@@ -3,208 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Rot Analysis | Advanced Research Project</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>NeuroScan v1.0 | LMK Research</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #6366f1;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg: #0b0f1a;
+            --card: rgba(23, 31, 50, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
         }
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, var(--bg-dark));
-            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: white;
             margin: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
+            background-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                              radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
         }
         #app {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 2.5rem;
-            border-radius: 24px;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            width: 100%; max-width: 500px;
+            padding: 40px; border-radius: 32px;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            text-align: center;
         }
-        h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
-        .survey-group { text-align: left; margin: 1.5rem 0; }
-        label { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; opacity: 0.9; }
-        
-        /* Input & Button Styling */
-        input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
-        .btn {
-            background: var(--accent); color: white; border: none;
-            padding: 14px 28px; border-radius: 12px; font-weight: 600;
-            cursor: pointer; width: 100%; transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        .header { margin-bottom: 40px; }
+        .header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin: 0; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { font-size: 0.85rem; opacity: 0.5; margin-top: 8px; }
+
+        /* Custom Slider */
+        .slider-container { margin: 30px 0; text-align: left; }
+        .slider-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; display: block; color: rgba(255,255,255,0.9); }
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 6px;
+            background: rgba(255,255,255,0.1); border-radius: 10px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
-        
-        /* Stroop Test Area */
-        .stroop-container { height: 120px; display: flex; align-items: center; justify-content: center; }
-        .stroop-word { font-size: 4rem; font-weight: 800; letter-spacing: -2px; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 2rem; }
-        .color-btn {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            padding: 16px; border-radius: 14px; cursor: pointer; font-weight: 700;
-            transition: background 0.2s; color: white;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px;
+            background: var(--primary); border-radius: 50%; cursor: pointer;
+            box-shadow: 0 0 15px var(--primary);
         }
-        .color-btn:hover { background: rgba(255,255,255,0.15); }
+
+        /* Choice Chips (Thay thế cho Select) */
+        .chip-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .chip {
+            padding: 10px 18px; border-radius: 12px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            font-size: 0.85rem; cursor: pointer; font-weight: 500;
+        }
+        .chip.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+
+        .btn-main {
+            margin-top: 30px; width: 100%; padding: 16px;
+            border-radius: 16px; border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; font-weight: 700; font-size: 1rem;
+            cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(99, 102, 241, 0.4); }
+
+        /* Test Area */
+        .stroop-word { font-size: 4.5rem; font-weight: 800; margin: 40px 0; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .opt-btn {
+            padding: 20px; border-radius: 20px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03); color: white; font-weight: 700;
+            cursor: pointer; font-size: 1rem;
+        }
+        .opt-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+
         .hidden { display: none; }
-        .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 2rem; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+        .progress-container { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        #progress-bar { height: 100%; background: var(--primary); width: 0%; }
     </style>
 </head>
 <body>
 
 <div id="app">
+    <div class="header">
+        <h1>NEURO-SCAN AI</h1>
+        <p>PROJECT BRAIN ROT | LÊ QUÝ ĐÔN SPECIALIZED SCHOOL</p>
+    </div>
+
     <div id="screen-survey">
-        <h2>Phân tích Nhận thức</h2>
-        <p style="opacity: 0.7; font-size: 0.9rem;">Dự án nghiên cứu Brain Rot - Lê Quý Đôn High School</p>
-        
-        <div class="survey-group">
-            <label>1. Thời gian tiêu thụ Video ngắn hàng ngày (giờ):</label>
+        <div class="slider-container">
+            <span class="slider-label">Mức độ tiêu thụ Video ngắn (Giờ/Ngày)</span>
             <input type="range" id="usage-range" min="0" max="10" step="0.5" value="2">
-            <div style="text-align: right; font-weight: bold;"><span id="usage-val">2</span>h</div>
+            <div style="text-align: right; margin-top: 10px; font-weight: 800; color: var(--primary);"><span id="usage-val">2</span>h</div>
         </div>
 
-        <div class="survey-group">
-            <label>2. Tần suất "lướt qua" video trong 3 giây đầu tiên?</label>
-            <select id="scroll-behavior" class="btn" style="background: rgba(255,255,255,0.05); text-align: left;">
-                <option value="1">Rất hiếm khi (Xem kỹ)</option>
-                <option value="2">Thỉnh thoảng</option>
-                <option value="3">Thường xuyên (Lướt liên tục)</option>
-                <option value="4">Liên tục (Không thể dừng lại)</option>
-            </select>
-        </div>
-
-        <div class="survey-group">
-            <label>3. Bạn có thấy khó khăn khi đọc sách > 10 trang?</label>
-            <input type="range" id="focus-reading" min="1" max="5" value="3">
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.6;">
-                <span>Dễ dàng</span><span>Cực khó</span>
+        <div class="slider-container">
+            <span class="slider-label">Tốc độ lướt (Behavioral Speed)</span>
+            <div class="chip-group" id="scroll-chips">
+                <div class="chip active" data-val="1">Chậm / Kỹ</div>
+                <div class="chip" data-val="2">Vừa phải</div>
+                <div class="chip" data-val="3">Nhanh</div>
+                <div class="chip" data-val="4">Siêu nhanh</div>
             </div>
         </div>
 
-        <button class="btn" onclick="startTest()">Bắt đầu Test Nhận Thức</button>
+        <div class="slider-container">
+            <span class="slider-label">Mức độ duy trì tập trung (Deep Work)</span>
+            <div class="chip-group" id="focus-chips">
+                <div class="chip" data-val="1">Kém</div>
+                <div class="chip" data-val="2">Trung bình</div>
+                <div class="chip active" data-val="3">Tốt</div>
+                <div class="chip" data-val="4">Xuất sắc</div>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="startAnalysis()">BẮT ĐẦU PHÂN TÍCH</button>
     </div>
 
     <div id="screen-test" class="hidden">
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <p style="font-size: 0.9rem; opacity: 0.8;">Nhấn vào <b>MÀU SẮC</b> bạn thấy, bỏ qua nội dung chữ!</p>
-        <div class="stroop-container">
-            <div id="stroop-display" class="stroop-word"></div>
-        </div>
-        <div class="options" id="color-options"></div>
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">CHỈ CHỌN MÀU SẮC, BỎ QUA CHỮ</p>
+        <div id="stroop-word" class="stroop-word">---</div>
+        <div class="options-grid" id="options-grid"></div>
     </div>
 
     <div id="screen-result" class="hidden">
-        <h2>Phân tích Hoàn tất</h2>
-        <div id="final-stats" style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; margin: 1.5rem 0;">
-            </div>
-        <button class="btn" onclick="location.reload()">Làm lại khảo sát</button>
+        <div id="result-content">
+            <div style="font-size: 3rem; margin-bottom: 20px;">⚡</div>
+            <h3>PHÂN TÍCH HOÀN TẤT</h3>
+            <p id="feedback-text" style="font-size: 0.9rem; opacity: 0.7; line-height: 1.6;"></p>
+            <div id="stat-box" style="margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 20px;"></div>
+        </div>
+        <button class="btn-main" onclick="location.reload()" style="background: rgba(255,255,255,0.1);">LÀM LẠI</button>
     </div>
 </div>
 
 <script>
     const colors = [
-        { name: "ĐỎ", value: "#ff4757" },
-        { name: "XANH", value: "#2e86de" },
-        { name: "LÁ", value: "#2ecc71" },
-        { name: "VÀNG", value: "#f1c40f" }
+        { n: "ĐỎ", v: "#ff4757" }, { n: "XANH", v: "#2e86de" },
+        { n: "LÁ", v: "#2ecc71" }, { n: "VÀNG", v: "#ffa502" }
     ];
+    let current = 0, max = 12, results = [], startTime, scrollVal = 1, focusVal = 3;
 
-    let currentTrial = 0;
-    const maxTrials = 12; // Tăng số lần để độ chính xác cao hơn
-    let results = [];
-    let startTime;
-    const scriptURL = 'URL_CỦA_KHÔI_Ở_ĐÂY';
+    // Chips Logic
+    document.querySelectorAll('.chip-group').forEach(group => {
+        group.addEventListener('click', e => {
+            if(e.target.classList.contains('chip')) {
+                group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                e.target.classList.add('active');
+                if(group.id === 'scroll-chips') scrollVal = e.target.dataset.val;
+                if(group.id === 'focus-chips') focusVal = e.target.dataset.val;
+            }
+        });
+    });
 
     document.getElementById('usage-range').oninput = function() { document.getElementById('usage-val').innerText = this.value; }
 
-    function startTest() {
+    function startAnalysis() {
         document.getElementById('screen-survey').classList.add('hidden');
         document.getElementById('screen-test').classList.remove('hidden');
-        nextTrial();
+        runTrial();
     }
 
-    function nextTrial() {
-        if (currentTrial >= maxTrials) { showResults(); return; }
+    function runTrial() {
+        if(current >= max) { finish(); return; }
+        document.getElementById('progress-bar').style.width = (current/max*100) + "%";
         
-        document.getElementById('progress-fill').style.width = (currentTrial / maxTrials * 100) + '%';
-        const display = document.getElementById('stroop-display');
-        const options = document.getElementById('color-options');
-        options.innerHTML = '';
-
-        const textIdx = Math.floor(Math.random() * colors.length);
-        let colorIdx;
-        do { colorIdx = Math.floor(Math.random() * colors.length); } while (colorIdx === textIdx);
-
-        display.innerText = colors[textIdx].name;
-        display.style.color = colors[colorIdx].value;
-
-        // Shuffle buttons để người dùng không bấm theo quán tính
-        const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
+        const txtIdx = Math.floor(Math.random()*colors.length);
+        let colIdx; do { colIdx = Math.floor(Math.random()*colors.length); } while(colIdx === txtIdx);
         
-        shuffledColors.forEach((c) => {
-            const btn = document.createElement('button');
-            btn.className = 'color-btn';
-            btn.innerText = c.name;
-            btn.onclick = () => handleAnswer(c.value === colors[colorIdx].value);
-            options.appendChild(btn);
+        const display = document.getElementById('stroop-word');
+        display.innerText = colors[txtIdx].n;
+        display.style.color = colors[colIdx].v;
+
+        const grid = document.getElementById('options-grid');
+        grid.innerHTML = '';
+        [...colors].sort(() => Math.random()-0.5).forEach(c => {
+            const b = document.createElement('button');
+            b.className = 'opt-btn';
+            b.innerText = c.n;
+            b.onclick = () => {
+                results.push({ ok: c.v === colors[colIdx].v, rt: Date.now()-startTime });
+                current++; runTrial();
+            };
+            grid.appendChild(b);
         });
-
         startTime = Date.now();
     }
 
-    function handleAnswer(isCorrect) {
-        results.push({ isCorrect, rt: Date.now() - startTime });
-        currentTrial++;
-        nextTrial();
-    }
-
-    async function showResults() {
+    async function finish() {
         document.getElementById('screen-test').classList.add('hidden');
         document.getElementById('screen-result').classList.remove('hidden');
+        
+        const avgRT = results.reduce((a,b)=>a+b.rt,0)/max;
+        const acc = (results.filter(r=>r.ok).length/max)*100;
+        
+        document.getElementById('stat-box').innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span>Độ nhạy:</span><b>${avgRT.toFixed(0)}ms</b></div>
+            <div style="display:flex; justify-content:space-between"><span>Chính xác:</span><b>${acc.toFixed(0)}%</b></div>
+        `;
+        document.getElementById('feedback-text').innerText = "Dữ liệu đang được đồng bộ với mô hình K-Means của hệ thống...";
 
-        const avgRT = results.reduce((a, b) => a + b.rt, 0) / maxTrials;
-        const accuracy = (results.filter(r => r.isCorrect).length / maxTrials) * 100;
-        const usage = document.getElementById('usage-range').value;
-        const scrollScore = document.getElementById('scroll-behavior').value;
-        const readingFocus = document.getElementById('focus-reading').value;
-
-        document.getElementById('final-stats').innerHTML = `<p>⏳ Đang đồng bộ hóa với hệ thống AI...</p>`;
-
-        // Gửi dữ liệu nâng cao lên Sheet
-        const dataToUpload = {
-            usage: usage,
-            avgRT: avgRT.toFixed(0),
-            accuracy: accuracy.toFixed(1),
-            scroll: scrollScore,
-            reading: readingFocus,
-            advice: accuracy < 80 ? "Nguy cơ cao" : "Ổn định"
-        };
-
+        // GỬI DATA (Khôi nhớ thay URL của bạn nhé)
+        const scriptURL = 'URL_CỦA_BẠN';
         try {
-            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(dataToUpload) });
-            document.getElementById('final-stats').innerHTML = `
-                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Phản xạ:</span> <b>${avgRT.toFixed(0)} ms</b>
-                </div>
-                <div style="display:flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Độ chính xác:</span> <b>${accuracy}%</b>
-                </div>
-                <hr style="opacity:0.1">
-                <p style="font-size: 0.9rem; line-height: 1.4; margin-top: 10px;">
-                    <b>Nhận xét sơ bộ:</b> Não bộ của bạn đang phản ứng với tốc độ 
-                    ${avgRT < 800 ? 'nhanh' : 'trung bình'}. Dữ liệu này đã được gửi vào bộ lọc Machine Learning của dự án.
-                </p>
-            `;
-        } catch (e) {
-            document.getElementById('final-stats').innerHTML = `<p>Lỗi kết nối. Vui lòng kiểm tra URL Script.</p>`;
-        }
+            await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    usage: document.getElementById('usage-range').value,
+                    avgRT: avgRT.toFixed(0),
+                    accuracy: acc.toFixed(0),
+                    scroll: scrollVal,
+                    focus: focusVal
+                })
+            });
+            document.getElementById('feedback-text').innerText = "Phân tích hoàn tất. Dữ liệu của bạn đã đóng góp vào nghiên cứu Brain Rot tại Lê Quý Đôn.";
+        } catch(e) { document.getElementById('feedback-text').innerText = "Đã lưu kết quả offline (Lỗi kết nối Server)."; }
     }
 </script>
 </body>
